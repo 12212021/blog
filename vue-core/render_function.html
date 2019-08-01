@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./node_modules//vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <example :tags="['h1', 'h2', 'h3']"></example>
+    </div>
+</body>
+<script>
+/* 
+case 
+example组件接收一个tags的prop，根据props内部的标签内容，渲染出相应的html
+本例子中，渲染的结果应该是
+<div>
+    <h1>h1</h1>
+    <h2>h2</h2>
+    <h3>h3</h3>
+</div> 
+*/ 
+
+Vue.component('example', {
+    props: {
+        tags: {
+            type: Array
+        },
+    },
+    render(h) {
+        const hGroups = this.tags.map(htag => h(htag, htag))
+        return h('div', hGroups);
+    }
+})
+
+new Vue({el: '#app'})
+
+/* 
+h function是Vue中createElement的缩写
+createElement函数接收的参数如下：
+createElement(
+  // {String | Object | Function}
+  // 一个 HTML 标签名、组件选项对象，或者
+  // resolve 了上述任何一种的一个 async 函数。必填项。
+  'div',
+
+  // {Object}
+  // 一个与模板中属性对应的数据对象。可选。
+  {
+    // (详情见下一节)
+  },
+
+  // {String | Array}
+  // 子级虚拟节点 (VNodes)，由 `createElement()` 构建而成，
+  // 也可以使用字符串来生成“文本虚拟节点”。可选。
+  [
+    '先写一些文字',
+    createElement('h1', '一则头条'),
+    createElement(MyComponent, {
+      props: {
+        someProp: 'foobar'
+      }
+    })
+  ]
+) 
+*/
+</script>
+</html>

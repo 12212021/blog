@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="../node_modules/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <form @submit="validate">
+            <input type="text" v-model="text">
+            <br>
+            <input type="text" v-model="email">
+            <ul v-if="!$v.valid" style="color: red">
+                <li v-for="error in $v.errors">
+                    {{error}}
+                </li>
+            </ul>
+            <input type="submit" :disabled="!$v.valid">
+        </form>
+    </div>
+</body>
+<script>
+// 本小节结合表单验证来讲述Vue plugin的使用和书写（Vuelidate）
+const emailReg = /^([A-Za-z0-9_\-\.])+\@([A-Za-z0-9_\-\.])+\.([A-Za-z]{2,4})$/;
+
+const validatePlugin = {
+    install(Vue) {
+        Vue.mixin({
+            computed: {
+                $v() {
+                    let valid = true
+                    const errors = []
+                    // this代表了当前正在运行的Vue实例
+                    const rules = this.$options.validations
+                    Object.keys(rules || {}).forEach(key => {
+                        const rule = rules[key]
+                        // 类比单文件组件中的data、props、watch、computed、method等属性
+                        const value = this[key]
+                        const result = rule.validator(value)
+                        if (!result) {
+                            valid = false
+                            errors.push(rule.message(key, value))
+                        }
+                    })
+                    return {
+                        valid,
+                        errors
+                    }
+                }
+            }
+        })
+    }
+}
+
+
+Vue.use(validatePlugin)
+new Vue({
+    el: '#app',
+    data: {
+        text: 'foo',
+        email: ''
+    },
+    validations: {
+        text: {
+            validator: value => value.length > 5,
+            message: (key, value) => `${key} should have a min length of 5, but got ${value}`
+        },
+        email: {
+            validator: value => emailReg.test(value),
+            message: key => `${key} must be a valid email`
+        }
+    },
+    methods: {
+        validate(e) {
+            if (!this.$v.valid) {
+                e.preventDefault();
+                alert('no valid');
+            }
+        }
+    },
+})
+
+/* 
+extend、mixin、extends区别
+这是js实现代码逻辑复用的一种模式，类似于继承，但是实现的方式和继承有些不同
+mixin(src, target):将src的所有属性和方法拷贝到target属性中，看起来就行是继承一样 
+这三种方式都是采用拷贝属性的方法来实现代码的复用，区别仅仅在于三者的优先级不同（hook执行的顺序）
+*/
+</script>
+</html>

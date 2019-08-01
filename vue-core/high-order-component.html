@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="./node_modules/vue/dist/vue.js"></script>
+</head>
+<body>
+    <div id="app">
+        <smart-avator :username="vue"></smart-avator>
+    </div>
+</body>
+<script>
+function fetchUrl(username, cb) {
+    setTimeout(() => {
+        cb('http://desired/img')
+    }, 500)
+}
+
+function withAvatorURL(InnerComponent) {
+    return {
+        props: ['username'],
+        data() {
+            return { url: 'http://placeholder/img'}
+        },
+        created() {
+            fetchUrl(this.username, url => {
+                this.url = url
+            })
+        },
+        render(h) {
+            return h(InnerComponent, {
+                props: {
+                    src: this.url
+                }
+            })
+        }
+    }
+}
+
+const Avator = {
+    props: ['src'],
+    template: `<img :src="src" width=200 height=200></img>`
+}
+
+const SmartAvator = withAvatorURL(Avator)
+
+new Vue({
+    el: '#app',
+    components: {
+        'smart-avator': SmartAvator,
+    },
+})
+</script>
+<!-- 
+高阶组件是逻辑复用的一种表现形式
+保持内部组件不发生变化，在函数的外部封装一些逻辑 
+-->
+</html>
