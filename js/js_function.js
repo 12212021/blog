@@ -77,3 +77,61 @@ Array.prototype.selfFilter2 = selfFilter2;
 console.log([1, 2, 3, 4, 4].selfFilter2(num => num % 2 === 0)); 
 */
 
+/* 
+用循环来实现数组的some方法
+*/
+const selfSome = function(fn, context) {
+    let arr = Array.prototype.slice.call(this);
+    if (arr.length === 0) {
+        return false;
+    }
+    for (let i = 0; i < arr.length; i++) {
+        if (arr.hasOwnProperty(i)) {
+            if (fn.call(context, arr[i], i, this)) {
+                return true;
+            }
+        }
+    }
+    return false;
+};
+/* 
+Array.prototype.selfSome = selfSome
+console.log([1,2,3,4,5].selfSome(num => num === 10))
+ */
+
+/* 
+循环实现数组的reduce方法
+ */
+const selfReduce = function(fn, initialValue) {
+    let arr = Array.prototype.slice.call(this);
+    let res;
+    let startIndex;
+    if (initialValue !== undefined) {
+        res = initialValue;
+    } else {
+        for (let i = 0; i < arr.length; i++) {
+            if (arr.hasOwnProperty(i)) {
+                startIndex = i;
+                res = arr[i];
+            }
+        }
+    }
+
+    for (let i = (++startIndex) || 0; i < arr.length; i++) {
+        if (arr.hasOwnProperty(i)) {
+            res = fn.call(null, res, arr[i], i, this);
+        }
+    }
+    return res;
+};
+
+/* 
+let a = Array(10);
+a = a.concat([1, 2]);
+Array.prototype.selfReduce = selfReduce;
+console.log(
+    a.selfReduce((pre, cur, index) => {
+        return pre + cur;
+    }),
+);
+ */
