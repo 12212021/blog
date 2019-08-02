@@ -117,7 +117,7 @@ const selfReduce = function(fn, initialValue) {
         }
     }
 
-    for (let i = (++startIndex) || 0; i < arr.length; i++) {
+    for (let i = ++startIndex || 0; i < arr.length; i++) {
         if (arr.hasOwnProperty(i)) {
             res = fn.call(null, res, arr[i], i, this);
         }
@@ -135,3 +135,74 @@ console.log(
     }),
 );
  */
+
+/* 
+reduce实现数组的flat方法
+原生的flat支持一个depth的参数，表示降维深度，默认是1即给数组降一层
+如果传入Inifity会将传入的数组变成一个一维数组
+ */
+
+const selfFlat = function(depth = 1) {
+    let arr = Array.prototype.slice.call(this);
+    if (depth === 0) {
+        return arr;
+    }
+    // reduce在提供initValue的时候，第一的pre就是initValue
+    // 不提供initValue的时候，第一个参数是数组第一个元素
+    return arr.reduce((pre, cur) => {
+        if (Array.isArray(cur)) {
+            return [...pre, ...selfFlat.call(cur, depth - 1)];
+        } else {
+            return [...pre, cur];
+        }
+    }, []);
+};
+
+/* 
+Array.prototype.selfFlat = selfFlat;
+console.log([[1,2,3,],2,[4,5,[2,43,22]]].selfFlat(2)); */
+
+/* 
+通过 Object.create 方法创造一个空对象，并将这个空对象继承 
+Object.create 方法的参数，再让子类（subType）的原型对象等于这个空对象，
+就可以实现子类实例的原型等于这个空对象，而这个空对象的原型又等于父类原型对象（superType.prototype）的继承关系
+备注：es6究竟是如何实现class语法糖的，还是不知道，就把这个例子当做Object.create的一个示范用例吧
+ */
+function inherit(subType, superType) {
+    subType.prototype = Object.create(superType.prototype, {
+        value: subType,
+        configurable: true,
+        enumerable: false,
+        writable: true,
+    });
+}
+
+/* 
+科里化是指：将结果多个参数的函数转化为接收一个参数的函数
+核心思想是：根据函数的参数个数，返回一个闭包函数，该闭包函数仅接受一个参数
+
+ */
+function curry(fn) {
+    // fn.lenght代表了函数期望接受的参数，其实就是函数的参数个数
+    if (fn.length === 0) {
+        return fn;
+    }
+    return (generator = (...args) => {
+        if (fn.length === args.length) {
+            return fn(...args);
+        } else {
+            return (...args2) => {
+                // 这个结构其实是将所有参数挨个传入的缩写
+                return generator(...args, ...args2);
+            };
+        }
+    });
+}
+
+let add = (a, b, c, d) => a + b + c + d;
+const curried1 = curry(add);
+const crrried2 = curried1(1);
+const crrried3 = crrried2(2);
+const crrried4 = crrried3(3);
+const crrried5 = crrried4(4);
+console.log(curried1, crrried2, crrried3, crrried4, crrried5);
