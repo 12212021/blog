@@ -198,7 +198,12 @@ function curry(fn) {
         }
     });
 }
+/* 偏函数和curry的区别：
+偏函数的是先固定函数的一部分参数，然后再一次性地接收剩余的所有参数。
+函数科里化会根据你传入的参数不停地返回函数，知道传入的参数等于被科里化的函数的参数总个数。
+ */
 
+/*
 let add = (a, b, c, d) => a + b + c + d;
 const curried1 = curry(add);
 const crrried2 = curried1(1);
@@ -206,3 +211,63 @@ const crrried3 = crrried2(2);
 const crrried4 = crrried3(3);
 const crrried5 = crrried4(4);
 console.log(curried1, crrried2, crrried3, crrried4, crrried5);
+ */
+
+/* 
+call函数的实现
+将函数作为传入的上下文的属性执行(函数的this指向，obj.say，say函数中的this一般就指向obj)
+ */
+
+function selfCall(context, ...args) {
+    let func = this;
+    context = context || window;
+    if (typeof func !== 'function') {
+        throw new TypeError('this is not a function');
+    }
+    let caller = Symbol('caller');
+    context[caller] = func;
+    let res = context[caller](...args);
+    delete context[caller];
+    return res;
+}
+
+/* 
+bind函数的实现 
+bind返回的函数被new调用的时候，绑定的this值会失效并且返回new创建的this对象（详见new操作符实现）
+被bind的函数要设置好自己的原型
+需要定义被bind之后的函数的length和那么属性
+*/
+const isComplexDataType = (obj) => 
+    (typeof obj === 'obj' || typeof obj === 'function') && (obj !== null);
+
+const slefBind = function(bindTarget, ...args1) {
+    if (typeof this !== 'function') {
+        throw new TypeError('Bind must be called on a function');
+    }
+    let func = this;
+    let bindFunc = function(...args2) {
+        let args = [...args1, args2];
+        // 如果被bind的函数是通过new call的，new.target为true，否则为false
+        if (new.target) {
+            // 这个this是new运算符创建的this对象
+            let res = func.apply(this, args);
+            if (isComplexDataType(res)) return res;
+            return this;
+        } else {
+            return func.apply(args);
+        }
+    };
+    // 这个this是调用bind的函数，在这个函数中和func同值
+    if (this.prototype) {
+        bindFunc.prototype = Object.create(this.prototype);
+    }
+
+    let desc = Object.getOwnPropertyDescriptors(func);
+    Object.defineProperty(bindFunc, {
+        length: desc.length,
+        name: Object.assign(desc.name, {
+            value: `bound${desc.name.value}`
+        })
+    })
+    return bindFunc;
+}
