@@ -56,3 +56,13 @@ async function getBookAndAuthor(authorId) {
         books: books.filter(b => b.authorId === authorId),
     };
 }
+
+/* 
+Error handing
+利用try...catch来捕获错误
+1、在await中直接处理这个错误，并且返回一个Value
+2、直接throw it，希望caller来处理它。可以直接throw一个新的error
+或者直接throw new Error(error)这样能够给caller一个完整的错误调用栈
+3、return Promise.reject(error)等同于throw一个error，不推荐
+4、因为await后的表达式返回一个Promise，所以也可以使用catch语句来捕获所有的错误。
+ */
