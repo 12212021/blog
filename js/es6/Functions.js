@@ -189,4 +189,63 @@ new.target属性是为undefined当函数不作为构造器进行调用的时候�
 
 
 
+//  5、块级作用域内的函数
+// "use strict"
+if (true) {
+    // es5 throw error在"use strict'指令下
+    function doSomething() {};
+}
+
+// "use strict"
+if (true) {
+    // 在"use strict'指令下function声明会提升到块级作用域的顶部（类比var）
+    // 如果没有"use strict'指令，函数会提升到全局的作用域（模块、脚本、函数作用域的顶部）
+    console.log(typeof doSomething); //function
+    function doSomething() {};
+    doSomething();
+}
+
+
+
+
+
+
+// 6、箭头函数
+/* 
+(1)、没有this、super、arguments、new.target绑定，这些值都是包含箭头函数的普通函数的的值
+(2)、不能被new操作符调用
+(3)、不能被call、apply、bind改变this的指向（改变包含箭头函数的普通函数的this指向，就能改变箭头函数中的this指向）
+(4)、没有prototype
+(5)、没有arguments object
+(6)、不能有重复的命名参数
+  */
  
+ 
+let test = {
+     name: 'source',
+     say() {
+         let innerSay = () => {
+             console.log(this.name);
+         }
+         innerSay();
+     }
+}
+let test2 = {
+     name: 'target'
+}
+test2.say = test.say;
+test.say(); // source
+test2.say(); //target
+// 尽量不要在箭头函数中访问上述的属性
+
+
+
+
+// 7、尾递归优化
+// es6进行了尾递归优化，前提是必须有"use strict"指令
+/* 
+当函数满足下面三个条件的时候，尾递归optimized
+(1)、尾部调用的函数不引用当前栈内变量（尾部调用的函数不是闭包）
+(2)、函数不能对尾部调用的函数的返回值进行处理，比方说加减乘除灯操作
+(3)、尾部调用函数的返回值必须作为当前函数的返回值 
+*/
