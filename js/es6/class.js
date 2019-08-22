@@ -27,9 +27,6 @@ console.log(typeof personClass2); // undefined
 var p = new personClass('yu');
 p.sayName(); // yu [Function: personClass2]
 
-
-
-
 // class的get、set方法(方法计算属性)
 let propertyName = 'html';
 class CustomerHTMLElement {
@@ -47,9 +44,6 @@ class CustomerHTMLElement {
     }
 }
 
-
-
-
 // statci Members
 // es5 way
 function PersonType(name) {
@@ -58,11 +52,11 @@ function PersonType(name) {
 // static method 可以直接通过PersonType（类）进行引用
 PersonType.create = function(name) {
     return new PersonType(name);
-}
+};
 // instance method
 PersonType.prototype.sayName = function() {
     console.log(this.name);
-}
+};
 
 // es6 way
 class PersonType2 {
@@ -79,8 +73,6 @@ class PersonType2 {
     }
 }
 
-
-
 // 继承方式
 
 // es5
@@ -91,7 +83,7 @@ function Ractangle(length, width) {
 
 Ractangle.prototype.getArea = function() {
     return this.length * this.width;
-}
+};
 
 function Square(length) {
     Ractangle.call(this, length, length);
@@ -102,12 +94,16 @@ Square.prototype = Object.create(Ractangle.prototype, {
         value: Square,
         enumerabel: false,
         writeble: true,
-        configurable: true
-    }
-})
+        configurable: true,
+    },
+});
 
-var square  = new Square(3);
-console.log(square.getArea(), square instanceof Square, square instanceof Ractangle); // 9 true true
+var square = new Square(3);
+console.log(
+    square.getArea(),
+    square instanceof Square,
+    square instanceof Ractangle,
+); // 9 true true
 
 //es6
 class Ractangle1 {
@@ -130,24 +126,22 @@ es6类型的类能够继承es5风格的函数
 class Square1 extends Ractangle1 {
     constructor(length) {
         // same as Ractangle.call(this, length, length)
-        super(length, length)
+        super(length, length);
     }
 }
-
-
 
 // es6风格实现mixin继承
 let SerializableMixin = {
     serialize() {
         return JSON.stringify(this);
-    }
-}
+    },
+};
 
 let AreaMixin = {
     getArea() {
         return this.length * this.width;
-    }
-}
+    },
+};
 
 function mixin(...mixins) {
     let base = function() {};
@@ -166,8 +160,6 @@ class Square2 extends mixin(AreaMixin, SerializableMixin) {
 let x = new Square2(3);
 console.log(x.getArea(), x.serialize()); // 9 {"length":3,"width":3}
 
-
-
 // 利用new.target来创建抽象类（不能被实例化）
 // class类只能通过new操作符来调用，所以在constructor内部，new.target永远部位undefined
 // example demo
@@ -185,7 +177,7 @@ class Square3 extends Ractangle3 {
     }
 }
 
-let objSqaure = new Square3(3) // [Function: Square3] true
+let objSqaure = new Square3(3); // [Function: Square3] true
 
 // shape是一个抽象类
 class Shape {
@@ -195,4 +187,3 @@ class Shape {
         }
     }
 }
-
