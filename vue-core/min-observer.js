@@ -2,6 +2,11 @@
 let activeRender;
 
 // 依赖收集类实现
+
+/* 
+props更新的时候，子组件的DOM树进行了重新渲染：子组件的render函数被被以来收集到父组件的data（reactive）属性中，
+当父组件中data发生变化的守候，子组件注册的render函数重新渲染（类似于react，react中状态树的改变全部取决于setState）
+ */
 class Dep {
     constructor() {
         this.subscribers = new Set();
