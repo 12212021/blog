@@ -350,3 +350,32 @@ const obj2: ReadOnlySelf<NestedNumber> = {a:{b:{c:2}}}
 obj2.a.b.c = 10; //不报错
 const obj3: DeepReadOnlySelf<NestedNumber> = {a:{b:{c:2}}};
 obj3.a.b.c = 12; // Cannot assign to 'c' because it is a read-only property.
+
+
+// 附录：操作符含义
+// ts的复杂类型分成了两类
+// set：无序、无重复元素的集合
+// map：没有重复键的键值对
+
+type Size = 'big' | 'small' | 'default' | 'large';
+interface IA {
+    a: string;
+    b: number;
+}
+
+// map => set
+type IAKeys = keyof IA; // "a" | "b"
+type IAValues = IA[keyof IA]; // string | number
+
+// set => map
+type SizeMap = {
+    [P in Size]: number;
+}
+
+// 索引操作
+type SubA = IA['a'];
+type Person = {
+    age: number;
+    readonly name: string; // 只读属性，初始化的时候必须赋值
+    nickname? : string; // 可选属性 相当于 | undefined
+}
