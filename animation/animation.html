@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+        <title>Document</title>
+        <style>
+            div {
+                height: 80px;
+                width: 80px;
+                margin-bottom: 10px;
+            }
+            .tarnsition-demo {
+                background-color: red;
+            }
+            .tarnsition-demo:hover {
+                transition: background-color 2s ease-in-out 0.5s;
+                /* transition: transition-property duration timing-function delay; */
+                /*1、 必须指定transition动画的两个状态 一般dom元素在浏览器渲染首次的某些状态被当作init状态（demo中是background-color）
+                  2、 必须指定end状态，浏览器根据初始状态和end状态了自动判断如何运行动画demo，end状态的指定一般是通过js动态添加类名、hover等伪状态实现
+                */
+                background-color: green;
+            }
+            .animation-demo {
+                background-color: red;
+                animation: fadeIn 2s ease-in-out;
+                /* animation
+                是关键帧动画，可以定义多个关键帧
+                transition是一种根据dom元素状态不同由浏览器进行计算的动画，当dom状态没有发生变化的时候，transition动画不会发生
+                但是animation动画是一种强制的动画，像上面的demo，background-color属性并没有发生变化，但是从chrome的动画面板中发现
+                animation还是执行了相关的动画
+                 */
+            }
+            @keyframes fadeIn {
+                to {
+                    background-color: red;
+                }
+            }
+            .js-demo {
+                background-color: orange;
+                position: absolute;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="tarnsition-demo"></div>
+        <div class="animation-demo"></div>
+        <div class="js-demo"></div>
+    </body>
+    <script>
+// 动画的本质是状态的改变造成元素样式的改变
+/* 
+css动画：性能更好，能够实现与业务逻辑的剥离，推荐优先使用，两种动画都能够指定多组动画，用分号隔开即可
+1、transition简易动画
+2、animation关键帧动画
+js动画：能够更好地控制动画的每一帧，如果需要更好的缓动函数 
+*/
+        const jsDeom = document.querySelector('.js-demo');
+        let animationInstance;
+        jsDeom.addEventListener('click', () => {
+            // 浏览器每秒渲染多帧动画，window.requestAnimationFrame是一个钩子函数，浏览器每次刷新屏幕的时候会给用户一个执行回调的机会
+            // 返回值是一个实例，该id可以用来作为window.cancelAnimationFrame()的参数来取消动画
+            animationInstance = window.requestAnimationFrame(function run(timeStamp /*浏览器执行本帧动画是的timeStamp 类似于performance.now()*/){
+                let rect = jsDeom.getBoundingClientRect();
+                if (rect.left <= 300 && rect.top <= 800) {
+                    jsDeom.style.left = rect.left + 20 + 'px';
+                    jsDeom.style.top = rect.top + 20 + 'px';
+                    window.requestAnimationFrame(run);
+                }
+            })
+        });
+    </script>
+</html>
