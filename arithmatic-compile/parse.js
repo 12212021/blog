@@ -99,6 +99,11 @@ class ParseArithMatic {
         const currentToken = this.tokens[this.index];
         if (currentToken.type === 'number') {
             this.consumeToken();
+            // 去除右括号实际上是在这里去除的
+            let nextToken = this.tokens[this.index];
+            if (nextToken && nextToken.type === 'rightBrackle') {
+                this.consumeToken();
+            }
             return currentToken.value;
         }
         // 不是number类型的值的话， Factor只能是一个带括号的expr
@@ -107,9 +112,6 @@ class ParseArithMatic {
         this.consumeToken();
 
         let node = this.parseExpr();
-
-        // 去除右括号
-        this.consumeToken();
 
         return node;
     }
