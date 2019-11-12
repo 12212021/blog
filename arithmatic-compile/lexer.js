@@ -15,7 +15,6 @@ class Lexer {
     lexcerSourceCode() {
         while (this.innerIndex < this.sourceCode.length) {
             const char = this.sourceCode[this.innerIndex];
-            console.log('inini', this.innerIndex, this.sourceCode.length)
             if (char === '(') {
                 this.tokens.push(this.makeToken('leftBrackle', char));
                 this.innerIndex += 1;
