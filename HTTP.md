@@ -36,11 +36,44 @@ HTTP报文的结构如下，**头部和实体之间的存在一个空行**
 ![image.png](https://i.loli.net/2019/11/13/Noe9P2JfUELCIb3.png)
 
 ### HTTP常用Headers
-* Host：请求，标识应该由哪一个主机进行处理
-* User-Agent： 请求，由于历史原因，屁用没有
-* Date：通常响应头中，标识HTTP报文创建的时间，客户端可以用这个字段搭配其它字段决定缓存的策略
-* Server：响应头，告诉客户端当前正在提供Web服务的软件名称和版本号，但是并不是必须出现的
-* Content-Length：响应头，标识响应报文中body的长度，没有这个字段的时候，body是不定长的，需要用chunked的方式分段传输。
+
+#### 常见一般的headers
+- Host：请求，标识应该由哪一个主机进行处理
+- User-Agent： 请求，由于历史原因，屁用没有
+- Date：通常响应头中，标识HTTP报文创建的时间，客户端可以用这个字段搭配其它字段决定缓存的策略
+- Server：响应头，告诉客户端当前正在提供Web服务的软件名称和版本号，但是并不是必须出现的
+- Content-Length：响应头，标识响应报文中body的长度，没有这个字段的时候，body是不定长的，需要用chunked的方式分段传输。
+  
+#### 客户端、服务器端MIME TYPE标识数据类型
+- Accept：请求头，Accept: text/html,application/xml,image/webp,image/png告诉服务端客户端能够看懂html、xml、webp、png类型的数据
+- Content-Type：响应头，告诉客户端服务器发送过来的数据是什么类型的
+- Accept-Encoding：请求头，告诉服务器自己支持的数据压缩格式（可以省略，省略代表客户端不支持压缩数据的格式）
+- Content-Encoding：响应头，告诉客户端服务器传输的数据压缩格式（可以省略，省略代表数据没有进行过压缩）
+
+#### 传输大文件、音视频采用的方法
+Accept-Encoding：告诉服务端自己能够识别的压缩算法，gzip对text/html的文件能够有比较好的压缩率，但是对于图片、音视频不行
+
+分块传输：Transfer-Encoding：chunked 表示body的报文是分块传出，它和Content-Length字段是互斥的，分块传输的数据格式如下图所示
+
+**浏览器在接收到分块的数据之后会自动将分块的数据合并在一起进行展示**
+![image.png](https://i.loli.net/2019/11/15/nRebklPSc8MsTum.png)
+
+范围传输：适用于视频的拖放，分拣的断点传输等。
+
+1、一般客户端需要先用OPTION方法询问服务端是否支持范围传输
+
+2、客户端： Range：byte=x-y 表示请求哪个范围的数据；服务器：Content—Range：bytes x-y/length
+
+
+#### HTTP长连接、短连接
+HTTP最早的版本采用短连接的方式传输数据，每发送一个HTTP请求，会新建立一个TCP连接，在HTTP 1.1之后，请求默认采用长连接的方式，不同的HTTP请求会复用tcp链路（tcp三次握手和四次挥手开销大）
+相关的headers有下面这些：
+- Connection：keep-alive 请求头，客户端明确表示需要使用长连接
+- Connection：close 请求头，客户端明确告诉服务端在这次请求之后关闭这个tcp链路
+- Connection：keep-alive 响应头，服务器端明确告诉客户端自身是支持长连接的，告诉客户端接下来的请求都复用这个tcp连接
+服务端一般也能有配置长连接，以Nginx为例
+- keepalive_timeout 60：60秒后关闭这个长连接
+- keepalive_requests 1000：当Nginx在这个tcp链接上面处理了1000个请求之后关闭它
 
 ### HTTP请求方法
 * GET：从服务器获取资源
@@ -65,7 +98,7 @@ HTTP报文的结构如下，**头部和实体之间的存在一个空行**
 - 3XX：重定向，资源的位置发生了变动，需要客户端重新发送请求
   - 301 Moved Permanently：永久重定向，表示此次请求的资源已经不存在了
   - 302 Found：临时重定向，表示资源还存在，但是需要暂时用另外一个url来访问
-  - 301 && 302状态响应码中包含了一个Location字段，标识了后续要跳转的URL
+  - 301 && 302状态响应码中包含了一个Location字段，标识了后续要跳转的URL；Refresh字段能够实现延时的重定向
   - 304 Not Modified：和If-Modified-Since等条件请求字段可以用于缓存控制
 - 4XX：客户端错误，发送的报文有误，服务器无法处理
   - 400 Bad Request：笼统地表示报文有误，没有具体的原因
