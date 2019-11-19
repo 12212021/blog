@@ -119,3 +119,47 @@ HTTP最早的版本采用短连接的方式传输数据，每发送一个HTTP请
   - 503 Service Unavailable：表示服务器现在比较忙，暂时无法响应请求
 
 
+### HTTP之Cookie
+HTTP是无状态的协议，服务端对客户端的身份一无所知，所以服务器无法为客户端提供“个性化”的服务，HTTP采用Cookie来标识客户端的身份。
+
+客户端首次访问服务器的时候，服务器是不知道客户端的身份的，所以会为客户端进行身份标识，*采用的字段是"Set-Cookie: key=value"*，服务端能够设置多个Set-Cookie字段，
+浏览器在后面的访问中会加上服务端设置的Cookie字段，*用分号进行分隔*
+
+Cookie的有效期：
+- Expires 表示在某个绝对的时间点Cookie过期，
+- Max-Age表示相对的时间点，在客户端接收到这个Cookie之后，时间经过Max-Age之后，Cookie过期，
+- 如果两个字段都存在，以Max-Age优先，
+- 如果Cookie的字段中没有过期相关字段，表示再浏览器打开这个页面的时候Cookie有效，过了这个时间Cookie无效
+
+Cookie相关字段：
+- Domain：Cookie所属的域
+- Path：Cookie的路径，一般服务器端给的都是根路径
+- HttpOnly：Cookie只能够通过浏览器的HTTP协议进行传输，浏览器的JS引擎禁止JS访问document.cookie相关的API
+- Secure：表示Cookie只能采用HTTPS协议加密传出，但是Cookie本身不是加密的
+
+
+### HTTP的缓存
+
+响应头关于缓存的headers
+- Cache-Control：max-age=30  表示从报文离开服务器的时间算起，30秒后报文过期，包括了在链路传输过程中在所有节点停留的时间
+- Cache-Control：no-store 不允许缓存，用于一些变化非常频繁的数据
+- Cache-Control：no-cache 可以缓存，但是在使用之前必须去服务器验证数据是否过期
+- Cache-Control：must-revalidate 如果缓存不过期就继续使用，如果缓存过期之后还想使用该缓存就必须向服务器进行验证
+
+
+客户端关于缓存的headers：
+- Cache-Control：max-age=0
+- Cache-Control：no-cache
+- 上面两个请求头是一样的，都是告诉浏览器要向服务器请求最新的数据，看服务器如何理解这个字段
+
+
+HTTP的条件请求：常用的条件请求头有如下字段
+- 'If-Modified-Since'-'Last-Modified':需要浏览器先返回Last-Modified子弹
+- 'If-None-Match'-'Etag'：需要浏览器先返回Etag字段
+
+浏览器在*第二次访问*的时候会带上上一次返回的Last-Modified或者Etag字段来验证资源是否发生变化，如果没有没法变化，服务端返回304，浏览器就可以更新一下有效期，然后放心大胆地使用缓存。
+
+整个HTTP缓存请求的方式为：服务器端的Cache-Control用来控制客户端缓存的策略。
+- Cache-Control：no-store：不需要设置max-age、Last-Modified、Etag等字段，浏览器每次都会请求最新的数据
+- Cache-Control：no-cache：允许浏览器缓存，但是每次在使用数据的时候都要向服务器进行数据验证，需要搭配Last-Modified、Etag等字段进行条件请求
+- Cache-Control：must-revalidate：允许浏览器缓存，搭配max-age字段，在缓存期内，浏览器直接使用缓存，过了缓存期，浏览器发起条件请求，更新缓存时间
