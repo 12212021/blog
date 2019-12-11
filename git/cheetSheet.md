@@ -124,6 +124,18 @@ git branch --set-upstream-to <branch-name> origin/<branch-name> #创建本地分
 * `git push origin <branch-name>`再次推送自己的修改
 
 
+### git merge
+git pull = git fetch + git merge
+git pull --rebase = git fetch + git rebase
+
+git merge其实是git rebase的一种默认的操作模式，git rebase是更加底层的一种操作git的方式。
+git merge常见的两种方式：
+- --ff（默认参数）：能采用fast-forword模式merge的时候，采用fast-forward模式，不生成新的节点
+- --no-ff 即使能采用fast-forward的模式进行merge也要生产一个新的合并节点。
+
+实例示意图
+![image.png](https://i.loli.net/2019/12/11/rZC3nTFgXMJ69uL.png)
+
 ### git rebase
 ```bash
 git rebase -i HEAD~4 #合并最近四次的提交记录
