@@ -111,3 +111,22 @@ arr.filter(function (value, index, array){
 // fliter、map、reduce函数都有一个thisArg的参数，用来指定callback执行时this的指向
 // callback必须是普通的函数才能访问到指定的thisArg，箭头函数没有this，指向了全局对象
 // 这种类型的函数本身对this没有强需求
+
+
+// 注：原型链原理
+function CreatePerson() {
+    this.name = 'yu';
+    this.age = 90;
+}
+
+let person = new CreatePerson();
+let personProto = Object.getPrototypeOf(person);
+let personProtoProto = Object.getPrototypeOf(personProto);
+let personProtoProtoProto = Object.getPrototypeOf(personProtoProto);
+
+console.log(personProto.constructor === CreatePerson, personProto);
+// person存一个一个原型对象，改原型对象的构造函数就是CreatePerson    || true CreatePerson {}
+console.log(personProtoProto.constructor === Object, personProtoProto, Object.getPrototypeOf({}) === personProtoProto);
+// person的原型对象也是对象，是由js引擎中Object的原型对象创建的，它的原型对象和对象字面量的原型对象是一个     || true {} true
+console.log(personProtoProtoProto);
+// 创建对象字面量的原型对象的原型是null
