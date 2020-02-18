@@ -43,7 +43,7 @@ console.log(Object.is(NaN, NaN)); // true
 
 
 
-// 5、Object.assign method
+// 5、Object.assign method（会将源对象中所有的可枚举属性都复制到目标对象）
 // assgin方法其实就js中常见的mixin继承的实现，大致的实现如下
 function mixin(receiver, supplier) {
     Object.keys(supplier).forEach(key => {

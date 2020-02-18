@@ -28,7 +28,7 @@ function getValue(condition) {
     function test() {
         // Cannot access 'val' before initialization
         console.log(val);
-        // let val;
+        let val;
     }
     test();
 }
@@ -36,6 +36,7 @@ function getValue(condition) {
 
 
 // function loops
+// var在for的loop中，不能引用index变量进行延迟性操作，这样index会保持最后一个值
 var funcs = [];
 for (var i = 0; i < 10; i++) {
     funcs.push(function() {

@@ -1,5 +1,5 @@
 // es6的class实际上标准化了es5常见class的方式
-// class是一等公民，可以当当作参数传递或者返回
+// class是一等公民，可以当作参数传递或者返回
 
 /* 
 1、class声明不会发生hoist，行为类似于let声明，存在暂时性死区
@@ -10,8 +10,8 @@
 6、在类内部方法中overwrite类名称会抛出错误 
 */
 
-// 类 expression
-// 类不是匿名类而是命名类，该名字（personClass2只能在类的内部使用）
+// 类可以当做expression使用，在当做expression使用的前提下
+// 类如果存在名字，该名字只能在类的内部进行使用，不能在类外部使用
 // js 解释器没有对personClass2在本地进行名称绑定，而是绑定在了类的内部
 var personClass = class personClass2 {
     constructor(name) {
