@@ -39,6 +39,15 @@ var node = {
 var {
     loc: { start: localStart = 2 },
 } = node;
+
+// nested解构赋值左侧对象的结构需要和右侧一样
+var {
+    loc: {start: {line: newLine = 2}},
+    loc: {start: {column: newColumn} = 3}
+} = node
+
+console.log(newLine, newColumn); // 1 1
+
 console.log(localStart); // { line: 1, column: 1 }
 // 对象解构赋值（类似于上面的start对象的解构赋值）是浅拷贝
 node.loc.start.line = 'foo';

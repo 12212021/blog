@@ -10,6 +10,7 @@ iterator可以被用在数组、set、map、string数据结构上
 iterator是一个对象
 内部有next method（return一个对象）
 return的对象中value表示值 done表示迭代是否完成
+下面的函数不能通过for of或者...操作符来消耗，这是一个iterator原理解释的例子
  */
 function createIterator(items) {
     let i = 0;
@@ -62,6 +63,24 @@ const infiniteIterable = {
 // for(let val of infiniteIterable) {
 //     console.log(val);
 // }
+
+// 这是一般的迭代器，产出1到100
+const plainIterator = {
+    [Symbol.iterator]() {
+        let begin = 0;
+        let end = 100;
+        return {
+            next() {
+                begin += 1;
+                return {
+                    value: begin,
+                    done: begin > end
+                }
+            }
+        }
+    }
+}
+
 
 
 let collection = {
