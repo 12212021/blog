@@ -53,7 +53,7 @@ HTTP报文的结构如下，**头部和实体之间的存在一个空行**
 #### 传输大文件、音视频采用的方法
 Accept-Encoding：告诉服务端自己能够识别的压缩算法，gzip对text/html的文件能够有比较好的压缩率，但是对于图片、音视频不行
 
-分块传输：Transfer-Encoding：chunked 表示body的报文是分块传出，它和Content-Length字段是互斥的，分块传输的数据格式如下图所示
+分块传输：Transfer-Encoding：chunked 表示body的报文是分块传出，它和Content-Length字段是互斥的，分块传输的数据格式如下图所示。（为什么要有这两个字段呢？HTTP连接现阶段默认是长连接，浏览器接收到数据的时候并不知道数据是不是传输完毕了，content-Length字段能够告诉浏览器本次请求是不是完成了；有些请求处理花费的时间比较长，对于TTFB指标性能不好，可以边处理边发送，这个时候Transfer-Encoding: chunked开始发挥作用。最后一个分块的长度为0表示数据传输结束）
 
 **浏览器在接收到分块的数据之后会自动将分块的数据合并在一起进行展示**
 ![image.png](https://i.loli.net/2019/11/15/nRebklPSc8MsTum.png)
