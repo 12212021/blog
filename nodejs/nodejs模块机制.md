@@ -55,5 +55,12 @@ var Vue =require('Vue') // 文件模块引用-库文件引用
 调用JSON.parse()函数进行记载，可以享受node模块缓存带来的优势
 
 ### 前后端共用的模块规范和实现
+- commonjs规范主要是后端规范
+- AMD规范、CMD规范（前端使用）
+- import、exports es6前后端共用的规范
 
 ### npm包字段解释
+- dependencies：当前包的依赖包
+- scripts:脚本说明对象，主要被包管理器用来安装、编译、测试、卸载包等行为
+- main：指定入口文件，该字段value会被作用改包的入口
+- devDepenencies：当前项目开发环境依赖的包
