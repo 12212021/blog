@@ -28,6 +28,8 @@ serve.on('error', (err) => {
     throw err;
 });
 
+// tcp服务端关闭（一般都是手动关闭）的时候会触发该事件，如果此时尚有连接存在，会等待
+// 所有的连接都关闭的时候触发事件
 serve.on('close', () => {
     console.log('tcp服务端关闭');
 });
