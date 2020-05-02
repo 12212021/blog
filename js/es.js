@@ -111,6 +111,7 @@ const adventurer = {
 };
 console.log(adventurer.dog?.name); //undefined
 // 等价于 adventurer.dog && advendurer.dog.name
+// 获取多层级的属性的时候非常有用
 
 // 2、 ?? 空值合并运算符 Nullish Coalescing
 // 当左侧的操作数为null或者undefined的时候，返回右侧的操作数否则返回左侧的操作数
