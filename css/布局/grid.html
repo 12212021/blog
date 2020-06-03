@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .dense {
+            display: grid;
+            grid-template-columns: 100px 100px 100px;
+            grid-template-rows: 100px 100px 100px;
+            grid-auto-flow: column;
+            grid-auto-rows: 100px;
+            grid-auto-columns: 100px;
+            /* 8、9放不下，浏览器会自动新增行列，后两个属性限制了新增的行列的长度 */
+        }
+
+        .item {
+            font-size: 4em;
+            text-align: center;
+            border: 1px solid #e5e4e9;
+        }
+
+        .item-1 {
+            background-color: #ef342a;
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+
+        .item-2 {
+            background-color: #f68f26;
+            grid-column-start: 1;
+            grid-column-end: 3;
+        }
+
+        .item-3 {
+            background-color: #4ba946;
+        }
+
+        .item-4 {
+            background-color: #0376c2;
+        }
+
+        .item-5 {
+            background-color: #c077af;
+        }
+
+        .item-6 {
+            background-color: #f8d29d;
+        }
+
+        .item-7 {
+            background-color: #b5a87f;
+        }
+
+        .item-8 {
+            background-color: #d0e4a9;
+        }
+
+        .item-9 {
+            background-color: #4dc7ec;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="dense">
+        <div class="item item-1">1</div>
+        <div class="item item-2">2</div>
+        <div class="item item-3">3</div>
+        <div class="item item-4">4</div>
+        <div class="item item-5">5</div>
+        <div class="item item-6">6</div>
+        <div class="item item-7">7</div>
+        <div class="item item-8">8</div>
+        <div class="item item-9">9</div>
+    </div>
+</body>
+<script>
+    /* 
+        基础概念：
+
+        1、display: grid   应用该规则的元素被叫做容器，其直接子元素被称为项目，项目不包括孙子元素等。
+        2、行和列：容器中水平区域被称作row，垂直方式被称作column
+        3、单元格（cell）：row和column交叉的区域被称为cell
+        4、网格线（grid line）：水平的网格线划分row，n行有n+1个网格线，垂直方式的网格线划分column
+     */
+
+
+    /* 
+       容器属性（display:grid 或者 inline-grid的元素能够设置的属性）：
+       
+       1、grid-template-column定义每一列的宽度，grid-template-row定义每一行的宽度
+           1）px、百分比等基础属性可用
+           2）写重复的值时可以用repeat(3, 100px)函数替代
+               - repeat(3, 100px)、 repeat(2, 100px 20px 80px): 定义了六列
+               - repeat(3 , 33.3%)、repeat(auto-fill, 100px)：表示每一列的宽度是100px，自动填充，直到容器不能放下更多的列就换行
+           3）fr关键字：grid-template-column： 1fr 2fr   后一列的宽度是前一列的两倍
+               - grid-template-column: 1fr 2fr
+               - grid-template-column: 100px 1fr 2fr  第一列是100px，剩下的宽度被剩下的两列瓜分，其中第三列是第二列宽度的两倍
+           4）minmax函数：产生一个长度范围，表示长度就在这个范围之内
+               - gird-template-column: 1fr 1fr minmax(100px, 1fr)  表示列宽大于等于100px，小于等于1fr
+           5）auto关键字：表示长度由浏览器自己决定
+               - grid-template-column: 100px auto 100px;
+           6）在该属性中定义grid line的名称，可以方便之后的引用
+               - grid-template-column: [c1] 100px [c2] 100px [c3] 100px [c4] grid-line被定义为c1、c2、c3、c4
+               - grid-template-column: [c1 first-line] 100px [c2]  网格允许一根线存在多个名字
+
+       2、row-gap、column-gap定义item之间的间距，gap相对于n row或者n column有n-1个gap
+       3、grid-template-areas：定义区域，一个区域可以有多个网格组成
+           1） display: grid;
+               grid-template-columns: 100px 100px 100px;
+               grid-template-rows: 100px 100px 100px;
+               grid-template-areas: 'a b c'
+                                    'd e f'
+                                    'g h i';
+               定义了9个区域，分别对应9个网格
+           2） grid-template-areas:'haerder header header'
+                                   'main main asider'
+                                   'footer footer footer'
+               定义了三个区域，顶部的区域是header，中间是main和asider，下面是footer
+           3） 定义区域的时候会自动定义grid-line的名称，名称规则为：区域名-start；区域名-end
+       4、grid-auto-flow： row | column  划分网格之后，默认row规则按照先行后列的规则排列，column是先列后行。还可以设置dense属性，详见示例
+       5、justify-items： start | end | center | stretch  设置cell的内容的水平位置
+           1）start：对齐单元格的起始边缘。
+           2）end：对齐单元格的结束边缘。
+           3）center：单元格内部居中。
+           4）stretch：拉伸，占满单元格的整个宽度（默认值）。  
+       6、align-items： start | end | center | stretch   设置cell单元格的垂直位置
+       7、justify-contents、align-contents  设置整个内容区域（所有单元格）在container容器的水平、垂直位置。
+       8、grid-auto-columns、grid-auto-rows   当网格只有3列，但是某一个项目指定在第五列，浏览器会自动生成网格。该属性用来设置自动生成的网格的列宽、行高
+       
+       注意：设置为网格布局之后：子元素（项目）的float、display: inline-block、display: table-cell、vertical-align和column-*等设置都将失效。
+     */
+
+
+
+    /* 
+          项目item属性
+          1、grid-column-start、grid-column-end、grid-row-start、grid-row-end 指定项目网格线的起始
+          2、justify-self、align-self  指定cell在网格内的水平方向和垂直方向的位置
+     */
+</script>
+
+</html>
