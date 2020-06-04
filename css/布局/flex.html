@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .container {
+            display: flex;
+            justify-content: flex-start;
+            align-self: center;
+            width: 300px;
+            height: 100px;
+        }
+
+        .item {
+            flex: 0 1 0;
+            width: 50px;
+        }
+
+        .item1 {
+            background-color: #b5a87f;
+        }
+
+        .item2 {
+            background-color: #d0e4a9;
+        }
+
+        .item3 {
+            background-color: #4dc7ec;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="item item1">1</div>
+        <div class="item item2">2</div>
+        <div class="item item3">3</div>
+    </div>
+</body>
+<script>
+    /* 
+        基础概念：
+        1、display: flex | inline-flex 应用该属性的元素被称为容器container
+        2、container的直接子元素被称为item（项目）
+        2、main-axis（主轴），cross-axis（交叉轴）：默认水平方向叫做主轴，垂直方向是交叉轴
+        3、main-start（主轴开始位置） main-end（主轴结束位置）
+        4、cross-start、cross-end（交叉轴的开始、结束位置）
+     */
+
+
+    /* 
+       容器属性：
+       1、flex-direction：row | row-reverse | column | column-reverse
+           决定主轴的方向
+       2、flex-wrap: nowrap | wrap | wrap-reverse（换行，第一行在下方）;
+           默认情况下，项目排列在主轴上，一行，如果一行放不下，该属性规定如何换行
+       3、justify-content: flex-start | flex-end | center | space-between | space-around
+           决定项目在主轴的对齐方式
+       4、align-items: flex-start | flex-end | center | baseline | stretch;
+           决定项目在交叉轴的对齐方式
+       5、align-content: flex-start | flex-end | center | space-between | space-around | stretch
+           定义了多根轴线的对齐方式，如果容器只有一个主轴，该属性不发挥作用
+     */
+
+
+    /* 
+        项目属性：
+        1、order： <integer> 决定项目的排列顺序
+        2、flex-grow： <number> 决定项目是否放大，默认为0，即使有剩余空间，也不放大
+        3、flex-shrink： <number> 决定项目是否缩小，默认是1，如果空间不足的情况下，缩小
+        4、flex-basic： <length> | auto 定义了在分配多余的空间之前，项目占据的主轴空间。
+            1）浏览器根据该属性来判断主轴是否有剩余空间
+            2）默认为auto，即项目本来的长度
+            3）可以给该属性设置 350px类似的值
+            4）为0则表示浏览器忽略项目设置的大小，其大小由grow、shrink等属性控制
+                - 如果该值为0且flex-grow属性为1，浏览器会忽略项目本身的大小，直接平分容器空间
+                - 如果该值为0且flex-shrink为1，grow为0，项目的大小为自身原本大小
+        5、flex： flex-grow flex-shrink flex-basic 三个值的缩写，有如下快捷值
+            1） auto （1 1 auto）
+            2） none (0 0 auto)
+        6、align-self 允许单个项目和其他项目有不一样的对齐方式。可以覆盖align-items
+     */
+</script>
+
+</html>
