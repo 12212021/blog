@@ -379,3 +379,5 @@ type Person = {
     readonly name: string; // 只读属性，初始化的时候必须赋值
     nickname? : string; // 可选属性 相当于 | undefined
 }
+
+func2 = func1;
