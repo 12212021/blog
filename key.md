@@ -20,7 +20,7 @@
 - 只有path路径发生变化，Vue才会重新渲染页面，path不发生变化，仅仅query参数发生变化，并不会重新渲染页面，也不会调用created钩子函数。需要button之类的按钮自行处理http请求
 - 组件在created的时候，需要有一个类似initStatusFromQuery之类函数来初始化APP的状态
 - Vue中同一个路径、query、params不能再次调用router.push，会触发NavigationDuplicated错误，路由的push本身是一个Promise函数，如果不关心这类错误，可以用catch函数进行忽略，如下面所示。
-
+- 对于新的app而言，可以通过合理的设计，将app的状态隐藏在path路径上，这样保证了状态发生变化的时候路由是一定会发生变化的
 ```js
 this.$router.push({
     path: './search',
