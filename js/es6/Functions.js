@@ -214,10 +214,11 @@ if (true) {
 /* 
 (1)、没有this、super、arguments、new.target绑定，这些值都是包含箭头函数的普通函数的的值
 (2)、不能被new操作符调用
-(3)、不能被call、apply、bind改变this的指向（改变包含箭头函数的普通函数的this指向，就能改变箭头函数中的this指向）
+(3)、不能被call、apply、bind改变this的指向（动态改变包含箭头函数的普通函数的this指向，就能改变箭头函数中的this指向）
 (4)、没有prototype
 (5)、没有arguments object
 (6)、不能有重复的命名参数
+(7)、箭头函数的this总是指向外层函数this，如果外层函数的this是箭头函数，则指向再外层，直到最后外层是window或者普通函数，箭头函数是词法作用域，参数不算在在函数体内部
   */
  
  
