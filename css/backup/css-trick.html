@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+
+            /* 
+            伪类(pseudo-class)：伪类一般表示元素处于某个状态中，比如是否link是否访问过，是否focus聚焦等
+            mdn: https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-classes
+
+            伪元素(pseudo-element)： 一般表示一个虚拟的，假的element
+            mdn： https://developer.mozilla.org/en-US/docs/Web/CSS/Pseudo-elements
+             */
+            .container {
+                margin-top: 50px;
+            }
+            .placeholder::-webkit-input-placeholder {
+                /* chrome safari */
+                color: red;
+            }
+
+            .placeholder::-moz-placeholder {
+                /* firefox */
+                color: red;
+            }
+
+            .placeholder:focus {
+                color: blue;
+            }
+
+            .no-border {
+                border: none;
+                outline: none;
+            }
+
+            .scroll {
+                height: 300px;
+                width: 200px;
+                overflow: auto;
+            }
+
+            .scroll::-webkit-scrollbar {
+                /*定义滚动条宽高及背景，宽高分别对应横竖滚动条的尺寸*/
+                width: 10px; /*对垂直流动条有效*/
+                height: 10px; /*对水平流动条有效*/
+            }
+
+            .scroll::-webkit-scrollbar-track {
+                /*定义滚动条的轨道颜色、内阴影及圆角*/
+                box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+                background-color: rosybrown;
+                border-radius: 3px;
+            }
+
+            .scroll::-webkit-scrollbar-thumb {
+                /*定义滑块颜色、内阴影及圆角*/
+                border-radius: 7px;
+                box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+                background-color: #e8e8e8;
+            }
+
+            .scroll::-webkit-scrollbar-button {
+                /*定义两端按钮的样式*/
+                background-color: cyan;
+            }
+
+            .scroll::-webkit-scrollbar-corner {
+                /*定义右下角汇合处的样式*/
+                background:khaki;
+            }
+
+            .child {
+                height: 100px;
+                width: 200px;
+                background-color: olivedrab;
+                margin-top: 30px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <input placeholder="文字提示" class="placeholder" />
+            <span>设置input 的placeholder的字体样式、聚焦的时候样式</span>
+        </div>
+
+        <div class="container">
+            <input type="text" class="no-border" placeholder="无边框" />
+        </div>
+
+        <div class="scroll">
+            <div class="child"></div>
+            <div class="child"></div>
+            <div class="child"></div>
+            <div class="child"></div>
+        </div>
+    </body>
+</html>
