@@ -271,3 +271,29 @@ const slefBind = function(bindTarget, ...args1) {
     })
     return bindFunc;
 }
+
+
+
+/* 
+jquery.offset() 方法
+获取当前dom元素的位置信息，该位置信息是相对于document而言
+
+1、Element.getBoundingClientRect: returns the size of an element and its position relative to the viewport.
+2、window.pageYOffset是window.scrollY的别名，pageXOffset类似
+3、The read-only scrollY property of the Window interface returns the number of pixels that the document is currently scrolled vertically.
+*/
+
+function offset(dom) {
+    if (!(dom instanceof HTMLElement)) {
+        return;
+    }
+
+    // 获取dom元素大小和相对于viewport的位置信息
+    const rect = dom.getBoundingClientRect();
+    // 获取dom所属文档的window对象
+    const win = dom.ownerDocument.defaultView;
+    return {
+        top: rect.top + win.pageYOffset,
+        left: rect.left + win.pageXOffset
+    }
+}
