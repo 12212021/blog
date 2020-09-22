@@ -132,3 +132,68 @@ template-driven的表单与Vue、React构建表单是比较一致的。视图和
 - Element UI中用transition组件包裹了一个absolute的标签用于提示用户验证失败信息（其父组件为relative）
 - validator的触发方式一般为blur和change事件
 
+
+
+
+##### 导航栏随页面滚动而滚动
+这个问题会被拆分成三个子问题。
+
+1、点击导航栏，页面的位置发生变化
+- 通过dom的scrollIntoView方法将dom移动到视口
+- 通过window.location.href锚点的方式来滚动页面
+- 借助smoothScroll等库来丝滑滚动，下面是Vue2官网的例子
+```js
+new SmoothScroll('a[href*="#"]',{
+    speed: 400,
+    speedAsDuration: true,
+    offset: function(anchor, toggle) {
+        let dataTypeAttr = anchor.attributes['data-type']
+        if (dataTypeAttr && dataTypeAttr.nodeValue === 'theme-product-title') {
+            return 300
+        }
+        return 0
+    }
+})
+```
+
+2、刷新页面的时候保存原来页面的位置和导航栏状态
+- 调用window.addEventListener方法来注册'beforeunload'事件，将页面的scrollTop，activeTab信息保存下来
+  - 'beforeunload'事件只能在window对象上注册，不能在document上注册
+  - 该事件一般是不需要remove的，**刷新页面会消除内存泄露的影响**
+  - Vue在刷新页面的时候是不会调用beforeDestroy、destroyed这两hooks
+  - 用sessionStorage来保存数据，sessionStorage在浏览器或者tab关闭的时候会自动清空信息
+- 在mounted钩子函数中init页面的状态
+
+3、滚动页面的时候，导航栏随着页面位置变化而变化
+参考Vue2官网的例子
+```js
+window.addEventListener('scroll', updateSidebar)
+function updateSidebar() {
+    var doc = document.documentElement
+
+    // An element's scrollTop value is a measurement of the distance from the element's top to its topmost visible content.
+    var top = doc && doc.scrollTop || document.body.scrollTop
+    if (animating || !allHeaders)
+        return
+    var last
+    // allHeaders是一个数组，内部存储页面的定义的所有的header
+    for (var i = 0; i < allHeaders.length; i++) {
+        var link = allHeaders[i]
+        
+        // The HTMLElement.offsetTop read-only property returns the distance of the current element relative to the top of the offsetParent node.
+        if (link.offsetTop > top) {
+            if (!last)
+                last = link
+            break
+        } else {
+            last = link
+        }
+    }
+    if (last)
+        setActive(last.id, !hoveredOverSidebar)
+}
+```
+
+在这个例子中，allHeaders中所有的dom的offsetTop都是相对document而言的，scrollTop代表视口内最上面的内容距离document；遍历所有的headers，当遇到第一个dom的offsetTop大于scrollTop的时候，页面默认聚焦到了该Tab
+
+局限性：当页面最底部的部分较短的时候，无论如何导航都无法聚焦到最后一个tab
