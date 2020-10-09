@@ -51,6 +51,67 @@ question：w元如何尽可能的用少的钞票凑出来
 贪心算法的问题：在于鼠目寸光，只考虑了眼前的情况，并没有基于全局去考虑问题，所以导致只能得到局部最优解
 
 ##### 动态规划
+动态规划（DP）：将一个问题拆解为几个小的子问题，分别求解这些子问题，即可推断出大问题的解
+
+DP算法的概念
+- 无后效性
+  - 一旦f(n)是确定的是，我们如何凑出f(n)便不是重点
+  - 严格定义：如果给定某一阶段的状态，则在这一阶段之后的发展不在受限于这个阶段之前的各个状态
+  - 通过无后效性，dp问题的分解可以用递归方程来描述
+- 最优子结构
+  - fn(n)定义为凑出n所需要的最少钞票数为f(n)，f(n)的定义蕴含了最优解
+
+
+
+依据问题的定义（最优子结构定义）和无后效性，可以推出如下递归方程
+
+f(w) = min(f(w-1) + 1, f(w-5) + 1, f(w-10) + 1, f(w-20) + 1, f(w-50) + 1, f(w-100) + 1)
+
+初始条件：f(1) = 1, f(5) = 1, f(10) = 1, f(20) = 1, f(50) = 1, f(100) = 1
+
+```js
+function setInitMap() {
+    let minMap = new Map();
+    minMap.set(1, 1);
+    minMap.set(5, 1);
+    minMap.set(10, 1);
+    minMap.set(20, 1);
+    minMap.set(50, 1);
+    minMap.set(100, 1);
+    return minMap;
+}
+
+let minNumberMap = setInitMap();
+
+function updateMinMap(key, value, map) {
+    map.set(key, value);
+}
+
+function getMinNumOfMoney(amount) {
+    if (amount <= 0) {
+        return 0;
+    }
+    const keys = [...minNumberMap.keys()];
+    if (keys.includes(amount)) {
+        return minNumberMap.get(amount);
+    } else {
+        let minNumber = Math.min(
+            1 + getMinNumOfMoney(amount - 1),
+            1 + getMinNumOfMoney(amount - 5),
+            1 + getMinNumOfMoney(amount - 10),
+            1 + getMinNumOfMoney(amount - 20),
+            1 + getMinNumOfMoney(amount - 50),
+            1 + getMinNumOfMoney(amount - 100)
+        );
+        updateMinMap(amount, minNumber, minNumberMap);
+        return minNumber;
+    }
+}
+
+console.log(getMinNumOfMoney(765));
+
+```
+
 
 
 
