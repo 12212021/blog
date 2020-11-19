@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .box1 {
+            display: flow-root;
+            margin-bottom: 100px;
+        }
+        .float {
+            float: left;
+            height: 100px;
+            width: 200px;
+            margin-right: 50px;
+            background-color: blue;
+        }
+        .text {
+            background-color: red;
+        }
+        .right {
+            display: flow-root;
+            height: 100%;
+            background-color: red;
+        }
+
+        .top {
+            height: 100px;
+            background-color: red;
+            margin-bottom: 100px;
+            display: flow-root;
+        }
+
+        .bottom {
+            height: 100px;
+            background-color: blue;
+            margin-top: 100px;
+            display: flow-root;
+        }
+
+        .box2 {
+            display: flow-root;
+        }
+    </style>
+</head>
+<body>
+    <div class="box1">
+        <div class="float"></div>
+        <div class="text">避免父元素高度塌陷</div>
+    </div>
+
+    <div class="box1">
+        <div class="float"></div>
+        <div class="right">布局(这里的margin不会被吃掉)</div>
+    </div>
+
+    <div class="box2">
+        <div class="top">上下margin不会发生合并</div>
+        <div class="bottom">表现不对，暂时还不理解</div>
+    </div>
+</body>
+</html>
