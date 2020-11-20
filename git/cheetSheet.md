@@ -145,3 +145,17 @@ git rebase master #假设当前分支为dev分支
 # 将dev分支更新为最新的master分支，然后将保存的patch文件应用到dev分支上面
 # git rebase和git merge的操作有一些像，但是rebase命令能够将git命令变成一条直线
 ```
+
+
+### 本地分支开发搁置许久，如何将本地的分支更新到最新分支
+1、首先再远程机器上将master分支合并到特定的分支
+
+2、git pull
+
+3、有冲突的时候执行以下命令
+- git reset --merge
+- git rebase
+- 修改冲突文件
+- git rebase --continue
+- git commmit -m
+- git push origin master
