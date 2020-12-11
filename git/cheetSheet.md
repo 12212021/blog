@@ -22,25 +22,11 @@
 ### 回到过去
 `git log --pretty=oneline` 查看提交的历史，主要是为了查询commit ID 
 
-`git reset --hard <commit ID>` 切换到想去的commit id上面 
-
-### 回到未来
 `git reflog` 查看自己提交过的commit id
 
-`git reset --hard <commit ID>` 切换到想去的commit id上面
+`git reset --hard <commit ID>` 切换到想去的commit id上面，不保留本次修改内容
 
-
-### 管理git修改
-git跟踪管理的是修改而不是文件：
-
-`git add 1.txt`
-`git commit`
-
-继续更改1.txt文件中的一些东西且再次进行add，第二次更改的内容并没有commit到相关的分支，如果需要第二次更改生效
-需要再次
-
-`git add 1.txt`
-`git commit`
+`git reset --soft <commit ID>` 切换到想去的commit id上面，将本次改动文件存放到staged区域
 
 
 撤销修改：
@@ -124,38 +110,42 @@ git branch --set-upstream-to <branch-name> origin/<branch-name> #创建本地分
 * `git push origin <branch-name>`再次推送自己的修改
 
 
-### git merge
-git pull = git fetch + git merge
-git pull --rebase = git fetch + git rebase
-
-git merge其实是git rebase的一种默认的操作模式，git rebase是更加底层的一种操作git的方式。
-git merge常见的两种方式：
-- --ff（默认参数）：能采用fast-forword模式merge的时候，采用fast-forward模式，不生成新的节点
-- --no-ff 即使能采用fast-forward的模式进行merge也要生产一个新的合并节点。
-
-实例示意图
-![image.png](https://i.loli.net/2019/12/11/rZC3nTFgXMJ69uL.png)
-
-### git rebase
+### git merge vs git rebase
 ```bash
-git rebase -i HEAD~4 #合并最近四次的提交记录
-
-git rebase master #假设当前分支为dev分支
-# git会将dev分支提交的commit取消掉，将这些commit记录临时保存为patch文件，在.git/rebase目录下面
-# 将dev分支更新为最新的master分支，然后将保存的patch文件应用到dev分支上面
-# git rebase和git merge的操作有一些像，但是rebase命令能够将git命令变成一条直线
+# git pull = git fetch + git merge
+# git pull --rebase = git fetch + git rebase
 ```
+
+#### git merge
+
+操作基本释义如下，有以下分支
+
+![image.png](https://i.loli.net/2020/12/11/EQJ7z6CKvYcq4xa.png)
+
+执行`git merge iss53`，git会将master和iss53分支的修改进行对照，git会使用这两个分支的末端节点（**C4和C5**）和两个分支**共同的祖先节点C2**做一个简单的三方合并（*如果存在冲突的话，解决冲突*），在master分支上生成一个新的节点（**C6**），同时master分支的指针指向该节点，效果如下图所示
+
+![image.png](https://i.loli.net/2020/12/11/bnMoNaG7jEVqs8S.png)
+
+#### git rebase
+
+有如下分支
+
+![image.png](https://i.loli.net/2020/12/11/A7IMl9byc1gZPhj.png)
+
+执行以下的命令`git switch experiment`和`git rebase master`，git会找到当前分支（expriment）和目标的基底分支（master）的**最近公共祖先（C2）**，然后将该分支相对于C2的数次提交存储为临时文件，将当前分支（expriment）指向基底分支（master）C3，最后将存储的临时文件依次应用，修改后如下
+
+![image.png](https://i.loli.net/2020/12/11/kErq1oFGhlAn9D4.png)
+
+
+
+#### 总结
+
+1. git整合不同分支主要有两种方法`git merge`和`git rebase`
+2. git rebase会将所有的提交整合成一条直线，看起来更加直观整洁
+3. git merge会保留代码库原始提交记录，从中可以发现更多的信息
 
 
 ### 本地分支开发搁置许久，如何将本地的分支更新到最新分支
 1、首先再远程机器上将master分支合并到特定的分支
 
-2、git pull
-
-3、有冲突的时候执行以下命令
-- git reset --merge
-- git rebase
-- 修改冲突文件
-- git rebase --continue
-- git commmit -m
-- git push origin master
+2、git pull --rebase
