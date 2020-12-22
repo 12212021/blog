@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            /* 
+            1、箭头朝哪个方向，哪个方向的border便是none
+            2、border不支持百分比设置，原因：语义化，现实世界中一个物体的边框不会随着物体变大而变大
+            3、border-color的颜色默认继承color的颜色
+             */
+            .triangle-up {
+                height: 0;
+                width: 0;
+                border-top: none;
+                border-bottom: 50px solid #00CECF;
+                border-left: 40px solid transparent;
+                border-right: 40px solid transparent;
+            }
+            .triangle-down {
+                height: 0;
+                width: 0;
+                border-bottom: none;
+                border-top: 50px solid #00CECF;
+                border-left: 40px solid transparent;
+                border-right: 40px solid transparent;
+            }
+            .triangle-left {
+                height: 0;
+                width: 0;
+                border-left: none;
+                border-right: 40px solid #00CECF;
+                border-top: 50px solid transparent;;
+                border-bottom: 50px solid transparent;;
+            }
+            .triangle-right {
+                width: 0;
+                height: 0;
+                border-right: none;
+                border-left: 40px solid #00CECF;
+                border-bottom: 50px solid transparent;
+                border-top: 50px solid transparent;
+            }
+            .cross-square {
+                width: 0;
+                height: 0;
+                border-left: 50px solid yellow;
+                border-right: 50px solid blue;
+                border-top: 50px solid gray;
+                border-bottom: 50px solid red;
+            }
+            .box {
+                margin-top: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="triangle-up box"></div>
+        <div class="triangle-down box"></div>
+        <div class="triangle-left box"></div>
+        <div class="triangle-right box"></div>
+        <div class="cross-square box"></div>
+    </body>
+</html>
