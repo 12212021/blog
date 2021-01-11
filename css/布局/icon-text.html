@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <link rel="stylesheet" href="https://at.alicdn.com/t/font_1769010_4idsk5xk1vu.css" />
+        <style>
+            .box {
+                height: 40px;
+                width: 300px;
+                background-color: #eee;
+                text-align: center;
+                line-height: 40px;
+                position: relative;
+            }
+            .yj-icondanchuangguanbi-icon-0 {
+                position: absolute;
+                right: 10px;
+            }
+            .box2 {
+                margin-top: 100px;
+                height: 40px;
+                width: 300px;
+                background-color: #eee;
+                text-align: center;
+                line-height: 40px;
+                position: relative;
+            }
+            .img {
+                width: 30px;
+                height: 30px;
+                line-height: 40px;
+                right: 10px;
+                position: absolute;
+                top: 50%;
+                /* bottom: 50%; */
+                /* transform: translate(-50%, -50%); */
+                transform: translate(0, -50%);
+            }
+        </style>
+    </head>
+    <body>
+        <div class="content">
+            <div class="box">
+                四海翻腾云水怒
+                <span class="yj-icondanchuangguanbi-icon-0 iconfont"></span>
+            </div>
+            <div class="box2">
+                四海翻腾云水怒
+                <img src="./img/avatar.jpg" alt="头像" class="img" />
+            </div>
+        </div>
+    </body>
+</html>
+
+<script>
+    /* 
+        Q：文字居中，右侧或者左侧有关闭、home之类的icon
+        A：box父容器的line-height保障了文字和icon都是垂直方向居中的，只需要将icon从文字流里剔除即可
+        依赖于absolute初始位置为其在文档流中本来应当的位置，我们只需要设置right属性，给一个间距即可
+
+        Q：当右侧的是图片或者div、span之类的元素，文字如何居中
+        A：采用box2和img的设置方法。
+
+        Q：transform: translate(x, y)代表啥意思啊
+        A：translate将元素的位置挪动x和y
+        xnewPos = xOldPos + <x>  yNewPos = yOldPos + <y>
+
+        Q：translate里面的百分比代表啥
+        A：以我自己的长宽为代表，比方说我高100px，-50%指回退50px的位置
+
+        Q：position为fixed或者absolte或者relative的元素，top百分比代表啥啊
+        A：代表元素包含块高度的百分比
+
+        Q：啥叫包含块啊
+        A：一直找你的爹，当你爹的postion属性不是fixed或者relative、absolute，就找爹的爹
+        如果所有的爹都不是上述属性，那html元素就是包含块
+     */
+
+</script>
