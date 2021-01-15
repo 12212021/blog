@@ -77,6 +77,22 @@
                 background-color: olivedrab;
                 margin-top: 30px;
             }
+
+            .text {
+                font-size: 18px;
+                font-weight: bold;
+                height: 38px;
+                line-height: 38px;
+                width: 200px;
+                text-align: center;
+            }
+            .text::after {
+                content: '';
+                width: 20px;
+                display: block;
+                border: 2px solid black;
+                margin: 0 auto;
+            }
         </style>
     </head>
     <body>
@@ -94,6 +110,10 @@
             <div class="child"></div>
             <div class="child"></div>
             <div class="child"></div>
+        </div>
+
+        <div class="container">
+            <div class="text">文字带短下划线且居中</div>
         </div>
     </body>
 </html>
