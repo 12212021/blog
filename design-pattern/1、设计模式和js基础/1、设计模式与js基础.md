@@ -171,7 +171,7 @@ Object 的 prototype 对象和 contructor 的 prototype 属性区别
 
 #### js 中的 this
 
-js 中 this 不是静态绑定，是运行中动态进行绑定，js 中 this 的指向遵从下面几条原则（**this 只能在函数或者方法内部访问**）
+js 中 this 不是静态绑定，是**运行中动态进行绑定**，js 中 this 的指向遵从下面几条原则（**this 只能在函数或者方法内部访问**）
 
 -   通过对象方法进行调用，则 this 指向该对象
 -   普通函数调用，非严格模式下，指向全局 window 对象，严格模式下为 undefined
