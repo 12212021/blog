@@ -81,6 +81,13 @@ es6被标记为模块的脚本，具有以下特性
 - top variables（顶层变量）不会被自动增加到global scope
 - this变量的值被定义为undefined
 - 可以单出执行`import './example.js'`，代表执行example文件
+- 模块的代码在加载之后才执行
+- 模块只能加载一次
+- 模块是单例
+- 模块可以定义公共接口，其他模块可以基于这个公共接口进行观察和交互
+- 模块可以请求加载其他的模块
+- 支持循环依赖
+- es6的模块是异步加载和执行的
 
 
 在浏览器环境下，模块的执行顺序，在浏览器环境下，标注js文件为module，defer属性被忽略，因为module文件执行表象就是标注了defer属性一样
@@ -116,6 +123,73 @@ let reseult = sum(1, 2);
 
 
 #### 循环加载
+
+##### commonjs的循环加载机制
+- commonjs模块加载存在缓存机制，第二次加载会读取之前的缓存模块
+- 加载执行的时候（require），代码会部分执行，一旦某个模块被循环加载了，输出已经执行部分，未执行部分不输出
+
+```js
+// a.js
+exports.done = false;
+var b = require('./b.js');
+console.log(`在a.js执行之前，b.done=${b.done}`);
+exports.done = true;
+console.log('a.js执行完毕');
+```
+
+```js
+// b.js
+exports.done = false;
+var a = require('./a.js');
+console.log(`在b.js执行完成之前，a.done=${a.done}`);
+exports.done = true;
+console.log('b.js执行完成');
+```
+
+```js
+// main.js
+var a = require('./a.js');
+var b = require('./b.js');
+console.log('在 main.js 之中, a.done=%j, b.done=%j', a.done, b.done);
+
+/*
+执行结果为
+在b.js执行完成之前，a.done=false
+b.js执行完成
+在a.js执行之前，b.done=true
+a.js执行完毕
+在 main.js 之中, a.done=true, b.done=true
+ */
+```
+注：a.js require b.js，执行b.js，b.js中require了a.js，a.js执行了一部分，输出done=false
+
+
+##### es6 module的循环加载机制
+```js
+// a.js
+import {bar} from './b.js';
+console.log('a.js');
+console.log(bar);
+export let foo = 'foo';
+
+
+// b.js
+import {foo} from './a.js';
+console.log('b.js');
+console.log(foo);
+export let bar = 'bar';
+
+/*
+执行a.js结果如下
+b.js
+ReferenceError: foo is not defined
+ */
+```
+a.js加载b.js，优先执行b.js，b.js从a.js中引入了foo接口，模块加载器会先给foo接口预定一个位置，等到真正要去引用执行foo接口的时候，再读取foo接口的值，
+此时，因为foo接口还没有定义，所以报ReferenceError
+
+1.a.js中foo用var进行声明，var声明会提升变量，但是未赋值，故引用值为undefined
+2.a.js中foo用function声明为函数，function声明会自动被引擎提升到顶端，故在b.js中能访问到foo函数，但是用let、const声明的函数不可以
 
 #### es6模块和commonjs模块的区别
 - es6模块是ECMAScript的标准，适用于浏览器和node环境，commonjs仅能用于后端node环境
