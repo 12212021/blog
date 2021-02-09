@@ -1,229 +1,163 @@
 /*
-组合模式的思想：事物总是由相似的事物构成
+模板方法模式是非常依赖  抽象类、类继承的一种方法
 
-组合模式的用途：
-1、能够比较好的表示树形结构
-2、利用对象的多态性统一对待组合对象和叶对象
+抽象类：封装了子类的抽象算法，包括实现一些公共类的方法以及封装子类方法的执行顺序
 
-组合模式的特点：
-1、组合模式的树形结构，很容易让人觉着组合节点和叶节点是父子关系，但是实际上是HAS-A关系，不是IS-A关系
-2、对叶对象的操作必须有一致性，所有的叶节点都要做某种操作，比方说给所有的员工发送1000元过节费适用组合模式，给过生日的员工发送祝福邮件就不适用，除非先把过生日的员工挑选出来
-3、发送过节费到员工，如果说某个员工属于两个部门，那么就需要进行区分，否则该员工就能收到两份过节费，组合对象和叶对象建立双向映射，会复杂一些
-4、职责链模式可以提高组合模式的性能，组合模式是深度优先遍历，请求顺着职责链传递，直到遇到能处理改请求的对象，就终止，能提高性能
+
+好莱坞原则：底层组件将自己挂钩到高层组件，由高层组件来决定什么时候去调用
+模板方法、发布-订阅模式、回调函数都是好莱坞原则的例子
 */
 
 /*
-例子1 万能遥控器，拥有以下功能
-1、打开空调
-2、打开电视和音箱
-3、关门、开电脑、打开QQ
+case1
+
+冲泡咖啡
+1、把水煮沸
+2、用沸水冲泡咖啡
+3、把咖啡倒进杯子
+4、加糖加牛奶
+
+冲泡茶
+1、把水煮沸
+2、用沸水冲泡茶叶
+3、把茶水倒进杯子
+4、加柠檬
 */
-class MacroCommand {
+
+class Beverage {
+    boilWater() {
+        console.log('把水煮沸');
+    }
+
+    brew() {
+        throw new Error('子类必须重写改方法');
+    }
+
+    pourInCup() {}
+
+    addCondiments() {}
+
+    // 此为模板方法，规定了冲泡饮料的步骤
+    init() {
+        this.boilWater();
+        this.brew();
+        this.pourInCup();
+        this.addCondiments();
+    }
+}
+
+class Coffee extends Beverage {
     constructor() {
-        this.commandList = [];
+        super();
     }
-    add(command) {
-        this.commandList.push(command);
-    }
-    execute() {
-        for (const command of this.commandList) {
-            command.execute();
-        }
-    }
-}
 
-class OpenAirConditioner {
-    add() {
-        throw new Error('leaf can not push command');
+    brew() {
+        console.log('用沸水冲泡咖啡');
     }
-    execute() {
-        console.log('open air cinditioner!');
+
+    pourInCup() {
+        console.log('把咖啡倒进杯子');
+    }
+
+    addCondiments() {
+        console.log('加糖加牛奶');
     }
 }
 
-class OpenDoor {
-    add() {
-        throw new Error('leaf can not push command');
+class Tea extends Beverage {
+    constructor() {
+        super();
     }
-    execute() {
-        console.log('open door!');
+    brew() {
+        console.log('用沸水冲泡咖啡');
     }
-}
 
-class OpenLoudspeaker {
-    add() {
-        throw new Error('leaf can not push command');
+    pourInCup() {
+        console.log('把咖啡倒进杯子');
     }
-    execute() {
-        console.log('open loudspeaker!');
-    }
-}
 
-class CloseDoor {
-    add() {
-        throw new Error('leaf can not push command');
-    }
-    execute() {
-        console.log('close door!');
+    addCondiments() {
+        console.log('加糖加牛奶');
     }
 }
 
-class OpenComputer {
-    add() {
-        throw new Error('leaf can not push command');
-    }
-    execute() {
-        console.log('open computer!');
-    }
-}
+/*
+模板方法比较依赖静态语言的抽象类和静态类型检查机制
+js没有相关的工具和脚手架，无法保证子类正确地实现了父类定义的抽象方法
 
-class LoginQQ {
-    add() {
-        throw new Error('leaf can not push command');
-    }
-    execute() {
-        console.log('login QQ!');
-    }
-}
+针对此，有如下解决方案
+1、用鸭子类型来检查相关的接口（直接上TS吧）    在编译的时候就能检查出问题
+2、在抽象父类中，对这个方法直接抛出异常       在运行的时候才能够检查出问题
+*/
 
-
-function testMicroCommand() {
-    const root = new MacroCommand();
-    const compositeOne = new MacroCommand();
-    const compositeTwo = new MacroCommand();
-
-    const openAirConditioner = new OpenAirConditioner();
-    const openDoor = new OpenDoor();
-    const openLoudspeaker = new OpenLoudspeaker();
-    const closeDoor = new CloseDoor();
-    const openComputer = new OpenComputer();
-    const loginQQ = new LoginQQ();
-
-    compositeOne.add(openDoor);
-    compositeOne.add(openLoudspeaker);
-
-    compositeTwo.add(closeDoor);
-    compositeTwo.add(openComputer);
-    compositeTwo.add(loginQQ);
-
-    root.add(openAirConditioner);
-    root.add(compositeOne);
-    root.add(compositeTwo);
-
-    root.execute();
-    /*
-    open air cinditioner!
-    open door!
-    open loudspeaker!
-    close door!
-    open computer!
-    login QQ!
-    */
-}
-
-
-// testMicroCommand();
-
-
-
+/*
+备注：子类也可能根本就不想被父类调用某些方法，这时候可以参考Vue、react等框架的生命周期钩子函数
+提供灵活性
+*/
 
 
 
 
 /*
-case2 文件夹和文件统一操作
-
-包括扫描，移除文件，增加文件三个功能
+另外一种实现方法：通过高阶函数可以轻易实现
 */
-class Folder {
-    constructor(name) {
-        this.fileList = [];
-        this.parent = null;
-        this.name = name + ' folder';
-    }
 
-    add(file) {
-        file.parent = this;
-        this.fileList.push(file);
-    }
+const Beverage1 = function (params) {
+    const boilWater = function () {
+        console.log('把水煮沸');
+    };
 
-    remove() {
-        // 孤立的叶子节点或者根节点
-        if (!this.parent) {
-            return;
-        }
-        const parent = this.parent;
-        parent.fileList = parent.fileList.filter(child => child !== this);
-    }
+    const brew = params.brew || function () {};
 
-    scan() {
-        for (const child of this.fileList) {
-            child.scan();
-        }
+    const pourInCup = params.pourInCup || function () {};
+
+    const addCondiments = params.addCondiments || function () {};
+
+    const F = function() {}
+    F.prototype.init = function() {
+        boilWater();
+        brew();
+        pourInCup();
+        addCondiments();
+    };
+    return new F();
+};
+
+const coffee = {
+    brew() {
+        console.log('用沸水冲泡咖啡');
+    },
+
+    pourInCup() {
+        console.log('把咖啡倒进杯子');
+    },
+
+    addCondiments() {
+        console.log('加糖加牛奶');
     }
+};
+
+const tea = {
+    brew() {
+        console.log('用沸水冲泡咖啡');
+    },
+
+    pourInCup() {
+        console.log('把咖啡倒进杯子');
+    },
+
+    addCondiments() {
+        console.log('加糖加牛奶');
+    }
+};
+
+
+function testTmeplateFunc() {
+    const coffeeIns = Beverage1(coffee);
+    console.log(coffeeIns);
+    coffeeIns.init();
+    const teaIns = Beverage1(tea);
+    teaIns.init();
 }
 
-class File {
-    constructor(name) {
-        this.parent = null;
-        this.name = name + ' file';
-    }
-
-    add(file) {
-        throw new Error('leaf can not push command');
-    }
-
-    remove() {
-        if (!this.parent) {
-            return;
-        }
-        const parent = this.parent;
-        parent.fileList = parent.fileList.filter(child => child !== this);
-    }
-
-    scan() {
-        console.log(this.name);
-    }
-}
-
-
-function testFile() {
-
-    const folderNodeDemo = new Folder('node-demo');
-    const fileNode = new File('node');
-    const fileJs = new File('js');
-    folderNodeDemo.add(fileNode);
-    folderNodeDemo.add(fileJs);
-
-    const folderHappy = new Folder('happy');
-    const music = new File('zhou');
-    const movie = new File('ultroman');
-    folderHappy.add(music);
-    folderHappy.add(movie);
-
-    const folderRoot = new Folder('root');
-    const litter = new File('san');
-    folderRoot.add(litter);
-    folderRoot.add(folderNodeDemo);
-    folderRoot.add(folderHappy);
-
-    folderRoot.scan();
-    /*
-    san file
-    node file
-    js file
-    zhou file
-    ultroman file
-    */
-
-    music.remove();
-    folderRoot.scan();
-    /*
-    san file
-    node file
-    js file
-    ultroman file
-    */
-}
-
-testFile();
+testTmeplateFunc();
