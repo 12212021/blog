@@ -17,7 +17,7 @@
             .tarnsition-demo:hover {
                 transition: background-color 2s ease-in-out 0.5s;
                 /* transition: transition-property duration timing-function delay; */
-                /*1、 必须指定transition动画的两个状态 一般dom元素在浏览器渲染首次的某些状态被当作init状态（demo中是background-color）
+                /*1、 必须指定transition动画的两个状态 一般dom元素在浏览器渲染首次的某些状态被当作init状态(demo中是background-color)
                   2、 必须指定end状态，浏览器根据初始状态和end状态了自动判断如何运行动画demo，end状态的指定一般是通过js动态添加类名、hover等伪状态实现
                 */
                 background-color: green;
@@ -52,11 +52,11 @@
     </body>
     <script>
 // 动画的本质是状态的改变造成元素样式的改变
-/* 
+/*
 css动画：性能更好，能够实现与业务逻辑的剥离，推荐优先使用，两种动画都能够指定多组动画，用分号隔开即可
 1、transition简易动画
 2、animation关键帧动画
-js动画：能够更好地控制动画的每一帧，如果需要更好的缓动函数 
+js动画：能够更好地控制动画的每一帧，如果需要更好的缓动函数
 */
         const jsDeom = document.querySelector('.js-demo');
         let animationInstance;
@@ -72,5 +72,37 @@ js动画：能够更好地控制动画的每一帧，如果需要更好的缓动
                 }
             })
         });
+
+        /*
+        transition API
+        transition: transition-property transition-duration transition-timing-function transition-delay
+        过渡元素在不同状态下的切换时定义不同的过渡效果，比如：伪类(:hover :active)，js切换dom的类
+
+
+        animation API
+        animation: name duration timing-functuin delay iteration-count direction fill-mode play-state
+
+
+        animation-direction
+        - normal(默认) 每个动画循环结束后，回到起点，重新开始播放
+        - alternate 动画交替反向运行，动画按帧后退，带时间功能的函数也反向(ease-in -> ease-out)
+        - reverse 反向运行动画，每周期结束动画由尾运行到头
+        - alternate-reverse 反相交替，反向开始交替
+
+        animation-iteration-count:
+        - infinite 无限次播放动画
+        - 1(默认为1，也可以定义0.5来播放动画的一部分)
+
+        animation-fill-mode
+        - none (默认)，保持原先css样式
+        - forwards 保留最后一帧的css状态，最后一帧取决于animation-direction和animation-iteration-count的值
+        - backwards 动画将在应用于目标时立即应用第一个关键帧中定义的值，并在animation-delay期间保留此值。 第一个关键帧取决于animation-direction的值：
+        - both 动画将遵循forwards和backwards的规则，从而在两个方向上扩展动画属性。
+
+        animation-play-state
+        running 当前动画正在运行
+        paused 当前动画已经停止
+        该属性可以用来查询动画是否停止
+        */
     </script>
 </html>
