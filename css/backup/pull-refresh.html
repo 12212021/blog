@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            @keyframes rotate {
+                0% {
+                    transform: rotate(0);
+                }
+                100% {
+                    transform: rotate(360deg);
+                }
+            }
+            .app {
+                height: 100vh;
+                overflow: auto;
+            }
+            .child {
+                width: 100%;
+                height: 100px;
+                line-height: 100px;
+                background-color: #cdebc7;
+                text-align: center;
+            }
+            .header {
+                text-align: center;
+                height: 100px;
+                width: 100%;
+                line-height: 100px;
+                position: sticky;
+                z-index: 1;
+                top: 0;
+                background-color: #f7e5cf;
+            }
+            .content::after {
+                content: '';
+                position: absolute;
+                box-sizing: border-box;
+                /*
+                top = -height时，贴近容器下边缘
+                top = - 2*height时候，有一定边距
+                */
+                top: -52px;
+                display: block;
+                left: 50%;
+                margin-left: -13px;
+                height: 26px;
+                width: 26px;
+                border-radius: 50%;
+                border: 3px solid #f7e5cf;
+                border-top: 3px solid transparent;
+                animation: rotate 1s 0s linear infinite;
+            }
+            .content {
+                position: relative;
+                transform: translateY(0px);
+                transition: transform, 0.3s ease-out;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="app">
+            <div class="header">header</div>
+            <div class="content">
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+                <div class="child">sample text</div>
+            </div>
+        </div>
+    </body>
+    <script>
+        // 出现半个loading图标的时候，就达到了临界值
+        const threshhold = 26 + 13;
+        const maxHeight = 26 * 3 * 1.5;
+
+        let start = 0;
+        let scrollTop = 0;
+        let transY = 0;
+
+        let isAnimating = false;
+        let isLoadig = false;
+
+        const contentDOM = document.querySelector('.content');
+        const appDOM = document.querySelector('.app');
+
+        /*
+         * @return Boolean
+         * @desc 当下拉刷新动画正执行的时候、正展示loading动画的时候、容器没有吸顶的时候，touch事件不响应
+         * @desc 当touchend事件触发后，加载动画，在此动画期间禁用touch事件
+         */
+        function fitPullRefresh() {
+            if (isAnimating || isLoadig || scrollTop > 0) {
+                return false;
+            }
+            return true;
+        }
+
+        function translateYDOM(dom, distance) {
+            dom.style.transform = `translateY(${distance}px)`;
+        }
+
+        function request() {
+            setTimeout(() => {
+                transY = 0;
+                translateYDOM(contentDOM, transY);
+                isLoadig = false;
+                setTimeout(() => {
+                    isAnimating = false;
+                }, 300)
+            }, 1000);
+        }
+
+        contentDOM.addEventListener('touchstart', e => {
+            if (!fitPullRefresh()) {
+                return;
+            }
+            // 重置下拉容器到顶部
+            transY = 0;
+            const point = e.touches[0];
+            start = point.clientY;
+        });
+        contentDOM.addEventListener('touchmove', e => {
+            if (!fitPullRefresh()) {
+                return;
+            }
+            const point = e.changedTouches[0];
+            const moveY = point.clientY - start;
+            // 向下滑动
+            if (moveY > 0 && moveY < threshhold) {
+                transY = moveY;
+                translateYDOM(contentDOM, transY);
+            }
+            // 超过threshhold，展示loading图标
+            else if (moveY > threshhold && moveY < maxHeight) {
+                transY = moveY;
+                console.log('move', moveY)
+                translateYDOM(contentDOM, transY);
+                return;
+            }
+        });
+        contentDOM.addEventListener('touchend', e => {
+            if (!fitPullRefresh()) {
+                return;
+            }
+            const point = e.changedTouches[0];
+            const moveY = point.clientY - start;
+
+            // 只拉了一小半，没到触发loading的临界值
+            if (moveY < threshhold) {
+                transY = 0;
+                translateYDOM(contentDOM, transY);
+                return;
+            }
+            // 过了临界值，有touchmove来决定dom块的translateY
+            // touchend代表手指松开，此时动画运行
+            isAnimating = true;
+            // loading图标正好居中，上下margin都是26px
+            transY = 26 * 3;
+            translateYDOM(contentDOM, transY);
+            // 请求钩子
+            request();
+        });
+        appDOM.addEventListener('scroll', e => {
+            const top = e.target.scrollTop;
+            scrollTop = top;
+        });
+    </script>
+</html>
