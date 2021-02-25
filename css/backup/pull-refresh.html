@@ -172,9 +172,17 @@
             // 请求钩子
             request();
         });
+
+        /*
+        * @desc 实时监控容器的scrollTop属性来判断容器是否吸顶
+        */
         appDOM.addEventListener('scroll', e => {
             const top = e.target.scrollTop;
             scrollTop = top;
         });
+        /*
+        1、css3 动画和js代码之间可以通过时间来同步（要求不精确的条件下）
+        2、可以通过animationend事件触发：事件会在一个CSS动画完成时触发（不包括完成前就已终止的情况，例如元素变得不可见或者动画从元素中移除）
+        */
     </script>
 </html>
