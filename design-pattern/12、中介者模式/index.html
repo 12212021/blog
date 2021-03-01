@@ -1,0 +1,284 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+    </head>
+    <body>
+        <div class="app">
+            选择颜色：<select id="colorSelect">
+                <option value="">请选择</option>
+                <option value="red">红色</option>
+                <option value="blue">蓝色</option>
+            </select>
+            选择内存：<select id="memorySelect">
+                <option value="">请选择</option>
+                <option value="64g">64G</option>
+                <option value="128g">128G</option>
+            </select>
+            输入购买的数量： <input type="text" id="numberInput" />
+            <br />
+            您选择了颜色：
+            <div id="colorInfo"></div>
+            <br />
+            您选择了内存：
+            <div id="memoryInfo"></div>
+            <br />
+            您输入了数量：
+            <div id="numberInfo"></div>
+            <br>
+            <button id="nextBtn" disabled="true">请选择手机规格</button>
+        </div>
+    </body>
+    <script>
+        /**
+         * 面向对象鼓励用户将对象划分为比较细粒度的小对象，这样比较有利于对象的复用，但是细粒度的对象可能存在大量
+         * 耦合关系，这些耦合关系不利于对象的复用
+         *
+         * 中介者模式：小对象和小对象之间不在耦合，对象向中介者对象发送消息，由中介者对象来管理对象之间的耦合关系
+         *
+         * 优点：减少对象之间的耦合，利于对象的复用
+         * 缺点：虽然减少了小对象之间的耦合关系，但是中介对象会迅速膨胀；中介者对象虽然能解耦一下对象之间的耦合关系
+         * 但是，程序中对象天然具备耦合关系，所以需要具体场景具体分析
+         *
+         *
+         * 消息通知，可以用传统的对象方式来进行通知，也可以用发布订阅模式来实现
+         *
+         */
+
+        class ConfirmBtn {
+            constructor(dom) {
+                this.btnDOM = dom;
+            }
+
+            setText(text) {
+                this.btnDOM.innerText = text;
+            }
+
+            enableBtn() {
+                this.btnDOM.disabled = false;
+            }
+
+            disableBtn() {
+                this.btnDOM.disabled = true;
+            }
+        }
+
+        class DisplayInfo {
+            constructor(dom) {
+                this.divDisplayDOM = dom;
+            }
+
+            setText(text) {
+                this.divDisplayDOM.innerText = text;
+            }
+        }
+
+        class ColorSelect {
+            constructor(dom) {
+                this.colorSelect = dom;
+                this.mediator = null;
+            }
+
+            change(color) {
+                this.mediator = getMediator();
+                this.mediator.receiveMessage('colorChange', color);
+            }
+        }
+
+        class MemorySelect {
+            constructor(dom) {
+                this.memoryDOM = dom;
+                this.mediator = null;
+            }
+
+            change(memory) {
+                this.mediator = getMediator();
+                this.mediator.receiveMessage('memoryChange', memory);
+            }
+        }
+
+        class InputControl {
+            constructor(dom) {
+                this.inputDOM = dom;
+                this.mediator = null;
+            }
+
+            input(value) {
+                this.mediator = getMediator();
+                this.mediator.receiveMessage('inputchange', value);
+            }
+        }
+
+        class Mediator {
+            constructor() {
+                this.nextBtn = null;
+                this.colorDisplay = null;
+                this.memoryDisplay = null;
+                this.numberDisplay = null;
+                this.color = '';
+                this.memory = '';
+                this.buyNumber = -1;
+                this.stock = [
+                    {
+                        color: 'red',
+                        memory: '64g'
+                    },
+                    {
+                        color: 'red',
+                        memory: '64g'
+                    },
+                    {
+                        color: 'red',
+                        memory: '64g'
+                    },
+                    {
+                        color: 'red',
+                        memory: '128g'
+                    },
+                    {
+                        color: 'red',
+                        memory: '128g'
+                    },
+                    {
+                        color: 'blue',
+                        memory: '64g'
+                    },
+                    {
+                        color: 'blue',
+                        memory: '64g'
+                    },
+                    {
+                        color: 'blue',
+                        memory: '128g'
+                    },
+                    {
+                        color: 'blue',
+                        memory: '128g'
+                    }
+                ]
+            }
+
+            receiveMessage(type, ...args) {
+                const [value] = args;
+                if (type === 'colorChange') {
+                    this.colorDisplay.setText(value);
+                    this.color = value;
+                } else if (type === 'memoryChange') {
+                    this.memoryDisplay.setText(value);
+                    this.memory = value;
+                } else {
+                    this.setBuyNumber(value);
+                }
+
+                this.setNextBtn();
+            }
+
+            setBuyNumber(number) {
+                const num = Number(number);
+                if (Number.isNaN(num) || num < 0) {
+                    this.numberDisplay.setText('请输入合法正整数');
+                    this.buyNumber = -1;
+                    return;
+                }
+                this.numberDisplay.setText(num);
+                this.buyNumber = num;
+            }
+
+            setColorDisplay(cls) {
+                this.colorDisplay = cls;
+            }
+
+            setMemoryDisplay(cls) {
+                this.memoryDisplay = cls;
+            }
+
+            setNumberDisplay(cls) {
+                this.numberDisplay = cls;
+            }
+
+            setBtn(cls) {
+                this.nextBtn = cls;
+            }
+
+            setNextBtn() {
+                if (this.buyNumber === -1) {
+                    this.nextBtn.setText('请选择手机规格');
+                    this.nextBtn.disableBtn();
+                    return;
+                }
+
+                const fitedStock = this.stock.filter(stock => {
+                    return stock.color === this.color && stock.memory === this.memory
+                });
+                const stockRemaind = fitedStock.length;
+                if (stockRemaind > this.buyNumber) {
+                    this.nextBtn.setText('库存合理，请购买');
+                    this.nextBtn.enableBtn();
+                    return;
+                }
+
+                this.nextBtn.setText('库存不足！');
+                this.nextBtn.disableBtn();
+            }
+        }
+
+        function createGetMediator() {
+            let instance = null;
+            return function () {
+                if (instance === null) {
+                    instance = new Mediator();
+                }
+                return instance;
+            };
+        }
+
+        const getMediator = createGetMediator();
+
+
+
+        function main() {
+            const colorDOM = document.getElementById('colorSelect');
+            const colorSelect = new ColorSelect(colorDOM);
+
+            colorDOM.addEventListener('change', function(e) {
+                colorSelect.change(this.value);
+            });
+
+
+            const memoryDOM = document.getElementById('memorySelect');
+            const memorySelect = new MemorySelect(memoryDOM);
+
+            memoryDOM.addEventListener('change', function(e) {
+                memorySelect.change(this.value);
+            });
+
+
+            const inputDOM = document.getElementById('numberInput');
+            const inputControl = new InputControl(inputDOM);
+
+            inputDOM.addEventListener('input', function(e) {
+                inputControl.input(this.value);
+            });
+
+            initMediator();
+        }
+
+        function initMediator() {
+            const mediator = getMediator();
+            const confirmBtn = new ConfirmBtn(document.getElementById('nextBtn'));
+            const colorInfo = new DisplayInfo(document.getElementById('colorInfo'));
+            const memoryInfo = new DisplayInfo(document.getElementById('memoryInfo'));
+            const numberInfo = new DisplayInfo(document.getElementById('numberInfo'));
+
+            mediator.setColorDisplay(colorInfo);
+            mediator.setMemoryDisplay(memoryInfo);
+            mediator.setNumberDisplay(numberInfo);
+            mediator.setBtn(confirmBtn);
+        }
+
+        main();
+    </script>
+</html>
