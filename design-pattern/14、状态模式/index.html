@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            #app {
+                padding-top: 100px;
+            }
+            .state {
+                font-size: 18px;
+                color: red;
+                margin-bottom: 50px;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <p class="state">当前状态：断电</p>
+            <div class="btn-group">
+                <button class="power-on">通电</button>
+                <button class="power-off">断电</button>
+                <button class="cooking">开始烹饪</button>
+                <button class="lid-open">打开盖子</button>
+                <button class="lid-close">关闭盖子</button>
+            </div>
+        </div>
+    </body>
+    <script>
+        /**
+         * 状态模式的核心在于以类来代表状态，context类委托调用状态类来执行真正的操作
+         * 状态模式通过新增类来避免if-else的膨胀
+         *
+         * 缺点：需要编写很多小的状态类
+         *
+         * js有专门的状态机类库: https://github.com/jakesgordon/javascript-state-machine
+         */
+
+        const powerOffDOM = document.querySelector('.power-off');
+        const powerOnDOM = document.querySelector('.power-on');
+        const cookingDOM = document.querySelector('.cooking');
+        const lidOpenDOM = document.querySelector('.lid-open');
+        const lidCloseDOM = document.querySelector('.lid-close');
+
+        class LidOpen {
+            constructor() {
+                setDOMText('盖子打开状态');
+                powerOffDOM.disabled = true;
+                powerOnDOM.disabled = true;
+                lidOpenDOM.disabled = true;
+                cookingDOM.disabled = true;
+                lidCloseDOM.disabled = false;
+            }
+            closeLid() {
+                return new LidClose();
+            }
+        }
+
+        class LidClose {
+            constructor() {
+                setDOMText('盖子关闭状态');
+                powerOffDOM.disabled = true;
+                powerOnDOM.disabled = false;
+                cookingDOM.disabled = true;
+                lidOpenDOM.disabled = false;
+                lidCloseDOM.disabled = true;
+            }
+
+            openLid() {
+                return new LidOpen();
+            }
+
+            powerOn() {
+                return new PowerOn();
+            }
+
+        }
+
+        class PowerOff {
+            constructor() {
+                setDOMText('断电状态');
+                powerOffDOM.disabled = true;
+                powerOnDOM.disabled = false;
+                cookingDOM.disabled = true;
+                lidOpenDOM.disabled = false;
+                lidCloseDOM.disabled = true;
+            }
+
+            powerOn() {
+                return new PowerOn();
+            }
+
+            openLid() {
+                return new LidOpen();
+            }
+
+        }
+
+        class PowerOn {
+            constructor() {
+                setDOMText('通电状态');
+                powerOffDOM.disabled = false;
+                powerOnDOM.disabled = true;
+                cookingDOM.disabled = false;
+                lidOpenDOM.disabled = true;
+                lidCloseDOM.disabled = true;
+            }
+
+            powerOff() {
+                return new PowerOff();
+            }
+
+            startCook() {
+                return new Cooking();
+            }
+
+        }
+
+        class Cooking {
+            constructor() {
+                setDOMText('烹饪状态');
+                powerOffDOM.disabled = false;
+                powerOnDOM.disabled = true;
+                cookingDOM.disabled = true;
+                lidOpenDOM.disabled = true;
+                lidCloseDOM.disabled = true;
+            }
+
+            powerOff() {
+                return new PowerOff();
+            }
+        }
+
+        /**
+         * ConText类维护当前状态类的引用
+         * 将真正的操作委托给当前状态类
+         */
+        class Context {
+            constructor(state) {
+                this.currentState = state;
+            }
+
+            openLid() {
+                this.currentState = this.currentState.openLid();
+            }
+
+            closeLid() {
+                this.currentState = this.currentState.closeLid();
+            }
+
+            startCook() {
+                this.currentState = this.currentState.startCook();
+            }
+
+            powerOn() {
+                this.currentState = this.currentState.powerOn();
+            }
+
+            powerOff() {
+                this.currentState = this.currentState.powerOff();
+            }
+        }
+
+        function setDOMText(text) {
+            const stateDOM = document.querySelector('.state');
+            stateDOM.innerHTML = `当前状态：${text}`;
+        }
+
+        function main() {
+            const stateCtx = new Context(new PowerOff());
+            powerOffDOM.addEventListener('click', function() {
+                stateCtx.powerOff();
+            });
+            powerOnDOM.addEventListener('click', function() {
+                stateCtx.powerOn();
+            });
+            cookingDOM.addEventListener('click', function() {
+                stateCtx.startCook();
+            });
+            lidOpenDOM.addEventListener('click', function() {
+                stateCtx.openLid();
+            });
+            lidCloseDOM.addEventListener('click', function() {
+                stateCtx.closeLid();
+            });
+        }
+
+        main();
+    </script>
+</html>
