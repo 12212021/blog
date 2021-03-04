@@ -50,19 +50,29 @@
             // 该事件不冒泡，字面意思
             console.log('mouse enter');
         });
-        targetDOM.addEventListener('mouseleave', function () {
+        targetDOM.addEventListener('mouseleave', function (e) {
             // 该事件不冒泡，切换到子元素的时候
             console.log('mouse leave');
         });
-        targetDOM.addEventListener('mouseout', function () {
+        targetDOM.addEventListener('mouseout', function (e) {
             // mouseleave事件冒泡版本
             // 当鼠标移动到外部、内部子元素、内部子元素切换时，均触发
             console.log('mouse out');
+
+            // （相关元素，目标元素）：只有在mouseout和mouseover两个事件中才有值
+            console.log('失去焦点的元素', e.currentTarget);
+            console.log('获得焦点的元素', e.relatedTarget);
+
         });
-        targetDOM.addEventListener('mouseover', function () {
+        targetDOM.addEventListener('mouseover', function (e) {
             // mouseenter的冒泡版本
             // 当鼠标移动到元素本身，移动到子元素上，内部子元素切换，均触发
             console.log('mouse over');
+
+            // 相关元素：
+            // 目标元素：
+            console.log('获得焦点的元素', e.currentTarget);
+            console.log('失去焦点的元素', e.relatedTarget);
         });
     </script>
 </html>
