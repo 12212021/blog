@@ -2,62 +2,78 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>BFC</title>
     <style>
-        .box1 {
+        .float-box {
+            border: 1px solid blue;
+            /* 不增加这句高度会塌陷 */
             display: flow-root;
-            margin-bottom: 100px;
+            margin-bottom: 200px;
         }
         .float {
             float: left;
-            height: 100px;
+            height: 200px;
             width: 200px;
-            margin-right: 50px;
+            background-color: pink;
+        }
+
+        .blue, .red-inner {
+            height: 50px;
+            margin: 10px 0;
+        }
+
+        .blue {
             background-color: blue;
         }
-        .text {
-            background-color: red;
-        }
-        .right {
-            display: flow-root;
-            height: 100%;
-            background-color: red;
-        }
 
-        .top {
-            height: 100px;
+        .red-outer {
+            overflow: hidden;
             background-color: red;
-            margin-bottom: 100px;
-            display: flow-root;
-        }
-
-        .bottom {
-            height: 100px;
-            background-color: blue;
-            margin-top: 100px;
-            display: flow-root;
-        }
-
-        .box2 {
-            display: flow-root;
         }
     </style>
 </head>
 <body>
-    <div class="box1">
-        <div class="float"></div>
-        <div class="text">避免父元素高度塌陷</div>
-    </div>
+    <div id="app">
+        <div class="float-box">
+            <div class="float"></div>
+            <p>just some text</p>
+        </div>
 
-    <div class="box1">
-        <div class="float"></div>
-        <div class="right">布局(这里的margin不会被吃掉)</div>
-    </div>
-
-    <div class="box2">
-        <div class="top">上下margin不会发生合并</div>
-        <div class="bottom">表现不对，暂时还不理解</div>
+        <div class="margin-case">
+            <div class="blue"></div>
+            <div class="red-outer">
+                <div class="red-inner">
+                </div>
+            </div>
+        </div>
     </div>
 </body>
+<script>
+    /*
+    块格式化上下文（Block Formatting Context BFC）是块盒子布局发生的地方，是浮动元素和其他元素交互的区域
+
+    以下属性会创建BFC：
+    根元素（<html>）
+    浮动元素（元素的 float 不是 none）
+    绝对定位元素（元素的 position 为 absolute 或 fixed）
+    行内块元素（元素的 display 为 inline-block）
+    表格单元格（元素的 display 为 table-cell，HTML表格单元格默认为该值）
+    表格标题（元素的 display 为 table-caption，HTML表格标题默认为该值）
+    匿名表格单元格元素（元素的 display 为 table、table-row、 table-row-group、table-header-group、table-footer-group（分别是HTML table、row、tbody、thead、tfoot 的默认属性）或 inline-table）
+    overflow 计算值(Computed)不为 visible 的块元素
+    display 值为 flow-root 的元素
+    contain 值为 layout、content 或 paint 的元素
+    弹性元素（display 为 flex 或 inline-flex 元素的直接子元素）
+    网格元素（display 为 grid 或 inline-grid 元素的直接子元素）
+    多列容器（元素的 column-count 或 column-width (en-US) 不为 auto，包括 column-count 为 1）
+    column-span 为 all 的元素始终会创建一个新的BFC，即使该元素没有包裹在一个多列容器中
+
+
+    BFC解决的问题：
+    1、浮动元素高度塌陷（浮动元素的高度不会被计算到父元素内）
+    2、解决两个相邻div之间的外边距合并问题(内层red-inner和blue之间的margin合并，其实不能解决red-outer和blue的合并)
+     */
+</script>
 </html>
