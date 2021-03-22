@@ -216,10 +216,10 @@ a = 100;
 <script src="a.js"></script>
 ```
 浏览器执行顺序如下
-1.停止解析document
-2.请求a.js
-3.执行a.js脚本
-4.继续解析document
+1. 停止解析document
+2. 请求a.js
+3. 执行a.js脚本
+4. 继续解析document
 
 
 2、defer
@@ -228,9 +228,9 @@ a = 100;
 <script src="e.js" defer></script>
 ```
 浏览器执行顺序
-1.不阻塞解析document，并下载d.js、e.js
-2.即使下载完成了js文件，仍然继续解析document
-3.按照script标签出现的顺序，在其他同步脚本执行完成后，DOMContentLoaded 事件前 依次执行 d.js, e.js。
+1. 不阻塞解析document，并下载d.js、e.js
+2. 即使下载完成了js文件，仍然继续解析document
+3. 按照script标签出现的顺序，在其他同步脚本执行完成后，DOMContentLoaded 事件前 依次执行 d.js, e.js。
 
 3、async
 ```html
@@ -238,8 +238,8 @@ a = 100;
 <script src="c.js" async></script>
 ```
 浏览器执行顺序
-1.不阻止解析 document, 并行下载 b.js, c.js
-2.当脚本下载完后立即执行。（两者执行顺序不确定，执行阶段不确定，可能在 DOMContentLoaded 事件前或者后 ）
+1. 不阻止解析 document, 并行下载 b.js, c.js
+2. 当脚本下载完后立即执行。（两者执行顺序不确定，执行阶段不确定，可能在 DOMContentLoaded 事件前或者后 ）
 
 
 #### 模块化目的和意义
