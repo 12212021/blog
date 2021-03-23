@@ -10,31 +10,30 @@
                 width: 200px;
                 height: 200px;
                 /* 这一行可以让事件透传，也能屏蔽子元素的click事件 */
-                pointer-events: none;
+                /* pointer-events: none; */
                 opacity: 0.5;
                 background-color: pink;
                 z-index: 100;
                 position: relative;
+                display: flex;
+                justify-content: center;
+                align-items: center;
             }
 
             .btn {
-                height: 30px;
-                position: absolute;
-                top: 50%;
-                left: 50%;
-            }
-            #app {
-                position: relative;
-                width: 200px;
-                height: 200px;
+                cursor: pointer;
+                user-select: none;
+                /* 子元素click事件可以穿透，父元素在捕获或者冒泡阶段触发 */
+                /* pointer-events: auto; */
+                /* 该属性常用语svg图形 https://developer.mozilla.org/zh-CN/docs/Web/CSS/pointer-events */
             }
         </style>
     </head>
     <body>
         <div id="app">
             <div class="modal">
+                <button class="btn">点击我</button>
             </div>
-            <button class="btn">点击我</button>
         </div>
     </body>
     <script>
