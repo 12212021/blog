@@ -63,6 +63,19 @@ js动画：能够更好地控制动画的每一帧，如果需要更好的缓动
         jsDeom.addEventListener('click', () => {
             // 浏览器每秒渲染多帧动画，window.requestAnimationFrame是一个钩子函数，浏览器每次刷新屏幕的时候会给用户一个执行回调的机会
             // 返回值是一个实例，该id可以用来作为window.cancelAnimationFrame()的参数来取消动画
+
+            /**
+             * requestAnimationFrame 由浏览器进行调用，能精确地告诉开发者动画是何时开始（浏览器绘制每一帧动画的时候）
+             * timeStamp参数告诉开发者，run函数会在未来时间点的某一刻被调用
+             * requestAnimationFrame属于高优先级的任务
+             *
+             * 如果用setTimeout来模拟动画的执行，理想的情况是delay是16.7ms（绘制一帧所需要的时间），但是不精确。
+             * 浏览器自身计时器的精确度也不是很高（chrome 4ms，firefox、safari是10ms）
+             *
+             * requestIdleCallback（Experimental）
+             * 在浏览器的空闲时间段来调用，属于低优先级任务
+             *
+             */
             animationInstance = window.requestAnimationFrame(function run(timeStamp /*浏览器执行本帧动画是的timeStamp 类似于performance.now()*/){
                 let rect = jsDeom.getBoundingClientRect();
                 if (rect.left <= 300 && rect.top <= 800) {
