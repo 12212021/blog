@@ -1,16 +1,16 @@
-/* 
-判断数据的类型 
+/*
+判断数据的类型
 call始终会将第一个参数进行装箱操作
 */
 const isType = type => target =>
     `[object ${type}]` === Object.prototype.toString.call(target);
 // use case
-/* 
+/*
 const isNUmber = isType('Number');
 console.log(isNUmber(2));
  */
 
-/* 
+/*
 循环实现数组的map方法
 */
 const slefMap = function(fn, context) {
@@ -25,12 +25,12 @@ const slefMap = function(fn, context) {
     return mappedArr;
 };
 // use case
-/* 
+/*
 Array.prototype.selfMap = slefMap;
 console.log([1, 2, 3].selfMap(num => num * 2));
  */
 
-/* 
+/*
  使用reduce来实现数组map方法
   */
 const selfMap2 = function(fn, context) {
@@ -40,7 +40,7 @@ const selfMap2 = function(fn, context) {
     }, []);
 };
 
-/* 
+/*
  循环实现filter方法
   */
 const selfFilter = function(fn, context) {
@@ -56,7 +56,7 @@ const selfFilter = function(fn, context) {
     return filteredArr;
 };
 
-/* 
+/*
 采用reduce来实现filter函数
  */
 const selfFilter2 = function(fn, context) {
@@ -71,13 +71,13 @@ const selfFilter2 = function(fn, context) {
     }, []);
 };
 
-/* 
+/*
 // use case
 Array.prototype.selfFilter2 = selfFilter2;
-console.log([1, 2, 3, 4, 4].selfFilter2(num => num % 2 === 0)); 
+console.log([1, 2, 3, 4, 4].selfFilter2(num => num % 2 === 0));
 */
 
-/* 
+/*
 用循环来实现数组的some方法
 */
 const selfSome = function(fn, context) {
@@ -94,12 +94,12 @@ const selfSome = function(fn, context) {
     }
     return false;
 };
-/* 
+/*
 Array.prototype.selfSome = selfSome
 console.log([1,2,3,4,5].selfSome(num => num === 10))
  */
 
-/* 
+/*
 循环实现数组的reduce方法
  */
 const selfReduce = function(fn, initialValue) {
@@ -125,7 +125,7 @@ const selfReduce = function(fn, initialValue) {
     return res;
 };
 
-/* 
+/*
 let a = Array(10);
 a = a.concat([1, 2]);
 Array.prototype.selfReduce = selfReduce;
@@ -136,7 +136,7 @@ console.log(
 );
  */
 
-/* 
+/*
 reduce实现数组的flat方法
 原生的flat支持一个depth的参数，表示降维深度，默认是1即给数组降一层
 如果传入Inifity会将传入的数组变成一个一维数组
@@ -158,12 +158,12 @@ const selfFlat = function(depth = 1) {
     }, []);
 };
 
-/* 
+/*
 Array.prototype.selfFlat = selfFlat;
 console.log([[1,2,3,],2,[4,5,[2,43,22]]].selfFlat(2)); */
 
-/* 
-通过 Object.create 方法创造一个空对象，并将这个空对象继承 
+/*
+通过 Object.create 方法创造一个空对象，并将这个空对象继承
 Object.create 方法的参数，再让子类（subType）的原型对象等于这个空对象，
 就可以实现子类实例的原型等于这个空对象，而这个空对象的原型又等于父类原型对象（superType.prototype）的继承关系
 备注：es6究竟是如何实现class语法糖的，还是不知道，就把这个例子当做Object.create的一个示范用例吧
@@ -177,7 +177,7 @@ function inherit(subType, superType) {
     });
 }
 
-/* 
+/*
 科里化是指：将结果多个参数的函数转化为接收一个参数的函数
 核心思想是：根据函数的参数个数，返回一个闭包函数，该闭包函数仅接受一个参数
 
@@ -213,7 +213,7 @@ const crrried5 = crrried4(4);
 console.log(curried1, crrried2, crrried3, crrried4, crrried5);
  */
 
-/* 
+/*
 call函数的实现
 将函数作为传入的上下文的属性执行(函数的this指向，obj.say，say函数中的this一般就指向obj)
  */
@@ -231,13 +231,13 @@ function selfCall(context, ...args) {
     return res;
 }
 
-/* 
-bind函数的实现 
+/*
+bind函数的实现
 bind返回的函数被new调用的时候，绑定的this值会失效并且返回new创建的this对象（详见new操作符实现）
 被bind的函数要设置好自己的原型
 需要定义被bind之后的函数的length和那么属性
 */
-const isComplexDataType = (obj) => 
+const isComplexDataType = (obj) =>
     (typeof obj === 'obj' || typeof obj === 'function') && (obj !== null);
 
 const slefBind = function(bindTarget, ...args1) {
@@ -274,7 +274,7 @@ const slefBind = function(bindTarget, ...args1) {
 
 
 
-/* 
+/*
 jquery.offset() 方法
 获取当前dom元素的位置信息，该位置信息是相对于document而言
 
@@ -296,4 +296,47 @@ function offset(dom) {
         top: rect.top + win.pageYOffset,
         left: rect.left + win.pageXOffset
     }
+}
+
+/**
+ *
+ * @param {any} src 被拷贝的元素
+ * @returns 深拷贝后的元素
+ */
+function deepCopy(src) {
+    let dist;
+    if (isPlain(src)) {
+        dist = src;
+        return dist;
+    }
+    const keys = Object.keys(src);
+    if (Array.isArray(src)) {
+        dist = [];
+    }
+    else {
+        dist = {}
+    }
+    keys.forEach(key => {
+        if (isPlain(src[key])) {
+            dist[key] = src[key];
+        }
+        else {
+            dist[key] = deepCopy(src[key]);
+        }
+    });
+    return dist;
+
+}
+
+function isPlain(item) {
+    if (item === null
+        || typeof item === 'number'
+        || typeof item === 'string'
+        || typeof item === 'symbol'
+        || typeof item === 'undefined'
+        || typeof item === 'function'
+        || typeof item === 'boolean') {
+        return true;
+    }
+    return false;
 }
