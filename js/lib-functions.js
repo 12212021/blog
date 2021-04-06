@@ -382,3 +382,24 @@ function throttle(fn, wait = 200) {
         }, wait);
     }
 }
+
+/**
+ *
+ * @param {Function} fn callback类型函数
+ * @returns 返回一个Promisefy的函数
+ * @description 默认callback回调函数，参数类型为(err, data)
+ */
+function promisefy(fn) {
+    return function(...args) {
+        return new Promise((resolve, reject) => {
+            args.push(function(err, data) {
+                if (err) {
+                    reject(err);
+                    return;
+                }
+                resolve(data);
+            });
+            fn.apply(null, args);
+        });
+    }
+}
