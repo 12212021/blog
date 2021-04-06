@@ -234,43 +234,16 @@ function selfCall(context, ...args) {
 
 /*
 bind函数的实现
-bind返回的函数被new调用的时候，绑定的this值会失效并且返回new创建的this对象（详见new操作符实现）
-被bind的函数要设置好自己的原型
-需要定义被bind之后的函数的length和那么属性
 */
-const isComplexDataType = (obj) =>
-    (typeof obj === 'obj' || typeof obj === 'function') && (obj !== null);
-
-const slefBind = function(bindTarget, ...args1) {
-    if (typeof this !== 'function') {
-        throw new TypeError('Bind must be called on a function');
+function selfBind(context, ...args1) {
+    const func = this;
+    if (typeof func !== 'function') {
+        throw new TypeError('must be callable!');
     }
-    let func = this;
-    let bindFunc = function(...args2) {
-        let args = [...args1, args2];
-        // 如果被bind的函数是通过new call的，new.target为true，否则为false
-        if (new.target) {
-            // 这个this是new运算符创建的this对象
-            let res = func.apply(this, args);
-            if (isComplexDataType(res)) return res;
-            return this;
-        } else {
-            return func.apply(args);
-        }
-    };
-    // 这个this是调用bind的函数，在这个函数中和func同值
-    if (this.prototype) {
-        bindFunc.prototype = Object.create(this.prototype);
+    return function(...args2) {
+        const args = [...args1, ...args2];
+        return func.apply(context, args);
     }
-
-    let desc = Object.getOwnPropertyDescriptors(func);
-    Object.defineProperty(bindFunc, {
-        length: desc.length,
-        name: Object.assign(desc.name, {
-            value: `bound${desc.name.value}`
-        })
-    })
-    return bindFunc;
 }
 
 
