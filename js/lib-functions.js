@@ -183,20 +183,15 @@ function inherit(subType, superType) {
 
  */
 function curry(fn) {
-    // fn.lenght代表了函数期望接受的参数，其实就是函数的参数个数
-    if (fn.length === 0) {
-        return fn;
-    }
-    return (generator = (...args) => {
-        if (fn.length === args.length) {
+    const argNumber = fn.length;
+    let args = [];
+    return function generator(arg) {
+        args.push(arg);
+        if (args.length === argNumber) {
             return fn(...args);
-        } else {
-            return (...args2) => {
-                // 这个结构其实是将所有参数挨个传入的缩写
-                return generator(...args, ...args2);
-            };
         }
-    });
+        return generator;
+    };
 }
 /* 偏函数和curry的区别：
 偏函数的是先固定函数的一部分参数，然后再一次性地接收剩余的所有参数。
