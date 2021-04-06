@@ -221,8 +221,9 @@ call函数的实现
 function selfCall(context, ...args) {
     let func = this;
     context = context || window;
-    if (typeof func !== 'function') {
-        throw new TypeError('this is not a function');
+    if (context === null || undefined) {
+        func(...args);
+        return;
     }
     let caller = Symbol('caller');
     context[caller] = func;
@@ -301,7 +302,7 @@ function offset(dom) {
 /**
  *
  * @param {any} src 被拷贝的元素
- * @returns 深拷贝后的元素
+ * @returns 深拷贝后的元素，需要提防循环引用引起的暴栈问题
  */
 function deepCopy(src) {
     let dist;
@@ -325,7 +326,6 @@ function deepCopy(src) {
         }
     });
     return dist;
-
 }
 
 function isPlain(item) {
