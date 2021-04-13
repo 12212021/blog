@@ -477,3 +477,42 @@ function selfNew(func, ...args) {
     const ret = func.apply(obj, args);
     return typeof ret === 'object' ? ret : obj;
 }
+
+
+
+/**
+ *
+ * @param {Array} arr the array to sort
+ * @returns {Array} sorted Array
+ */
+function quickSort(arr) {
+    if (arr.length === 0) {
+        return arr;
+    }
+    const [left, right, pivot] = partition(arr);
+    const leftSorted = quickSort(left);
+    const rightSorted = quickSort(right);
+    return [...leftSorted, pivot, ...rightSorted];
+}
+
+/**
+ * partition array to three parts, members in left is smaller thann pivot, right is bigger
+ * @param {Array} arr the array to partition
+ * @returns {Array} [left, right, right]
+ */
+function partition(arr) {
+    const pivot = arr[0];
+    let left = [];
+    let right = [];
+    let index = 0;
+    while(++index < arr.length) {
+        const value = arr[index];
+        if (value < pivot) {
+            left.push(value);
+        }
+        else {
+            right.push(value);
+        }
+    }
+    return [left, right, pivot];
+}
