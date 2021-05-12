@@ -1,16 +1,14 @@
-# git 使用指南简介
-
 ##  创建git工作区间
 
 ### 初始化git工作区
 `git init` 在当前目录下面生成.git隐藏文件夹，包含了git工作所需的全部信息
 
 ### git提交三连
-`git add <filename>` 将文件从工作区提交到暂存区  
+`git add <filename>` 将文件从工作区提交到暂存区
 
 `git commit -m <filename>` 暂存区 -> 当前分支（一般是master分支）
 
-`git push origin master` 将本地的master分支push到远程分支上面（origin为git中默认的远程分支名称）  
+`git push origin master` 将本地的master分支push到远程分支上面（origin为git中默认的远程分支名称）
 
 
 ### git 工作区、暂存区、分支示意图
@@ -20,7 +18,7 @@
 ## git时光机穿梭
 
 ### 回到过去
-`git log --pretty=oneline` 查看提交的历史，主要是为了查询commit ID 
+`git log --pretty=oneline` 查看提交的历史，主要是为了查询commit ID
 
 `git reflog` 查看自己提交过的commit id
 
