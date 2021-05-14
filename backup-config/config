@@ -1,0 +1,13 @@
+# git
+Host git.lianjia.com
+HostName git.lianjia.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_ke_rsa
+
+# github
+Host github.com
+HostName github.com
+PreferredAuthentications publickey
+IdentityFile ~/.ssh/id_github_rsa
+
+# 公司和github分别使用不同的ssh token

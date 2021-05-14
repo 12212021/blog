@@ -56,3 +56,5 @@ function sameVnode (a, b) {
   )
 }
 ```
+
+附录线上demo: https://codesandbox.io/s/ancient-moon-427u7?file=/src/App.vue
