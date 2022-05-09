@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+
+        <style>
+            .pseudo .tab::after {
+                content: '';
+                display: block;
+                position: absolute;
+                width: 0;
+                height: 4px;
+                background-color: green;
+                left: 0;
+                bottom: 0;
+                transition: width 0.5s ease-in-out 0.1s;
+            }
+            .pseudo .tab:hover:after {
+                width: 100%;
+            }
+            .background .tab {
+                background-image: linear-gradient(#e66465, #e66465);
+                background-size: 0 4px;
+                transition: background-size 0.5s ease-in-out 0.1s;
+                /* 很重要，默认background会填充整个区域 */
+                background-repeat: no-repeat;
+                /* 通过position的位置来定位背景色 */
+                background-position: left bottom;
+                /* 通过这种思路来设置动画，效果强大，具体可参考blog
+                https://css-tricks.com/cool-hover-effects-using-background-properties/
+                */
+            }
+            .background .tab:hover {
+                background-size: 100% 4px;
+            }
+            .tab {
+                padding: 10px 15px;
+                display: inline-block;
+                position: relative;
+                box-sizing: border-box;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="pseudo">
+            <div class="tab">伪元素下划线展示</div>
+        </div>
+
+        <div class="background">
+            <div class="tab">背景图片的下划线展示</div>
+        </div>
+    </body>
+</html>
