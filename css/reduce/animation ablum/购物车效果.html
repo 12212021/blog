@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            .begin {
+                left: 0;
+                top: 0;
+            }
+            .end {
+                left: calc(100% - 20px);
+                top: calc(100% - 20px);
+            }
+            .contain {
+                width: 800px;
+                height: 600px;
+                position: relative;
+            }
+            .circle {
+                display: block;
+                width: 20px;
+                height: 20px;
+                background-color: green;
+                border-radius: 50%;
+                position: absolute;
+                /* 标记多个属性的时候，可以用逗号隔开 */
+                transition: top ease-in 0.5s, left linear 0.5s;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="contain">
+            <div class="circle begin"></div>
+        </div>
+    </body>
+    <script>
+        // js可以通过切换class的方式来为元素设置不同状态
+        const circleDOM = document.querySelector('.circle');
+        circleDOM.addEventListener('click', () => {
+            circleDOM.classList.remove('begin');
+            circleDOM.classList.add('end');
+        });
+    </script>
+</html>

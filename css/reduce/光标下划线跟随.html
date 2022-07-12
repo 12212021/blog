@@ -1,44 +1,44 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        ul {
-            display: flex;
-            width: 800px;
-        }
-        li {
-            /* 去除li默认样式 */
-            list-style-type: none;
-            font-size: 24px;
-            padding: 0 15px;
-            position: relative;
-            cursor: pointer;
-        }
-        li::before {
-            content: '';
-            position: absolute;
-            /* 占据li元素高度的100% */
-            top: 100%;
-            /* 动画效果从右往左滑动  占据li元素宽度的100% */
-            left: 100%;
-            width: 0;
-            border-bottom: 2px solid #000;
-            transition: 0.3s all linear;
-        }
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            ul {
+                display: flex;
+                width: 800px;
+            }
+            li {
+                /* 去除li默认样式 */
+                list-style-type: none;
+                font-size: 24px;
+                padding: 0 15px;
+                position: relative;
+                cursor: pointer;
+            }
+            li::before {
+                content: '';
+                position: absolute;
+                /* 占据li元素高度的100% */
+                top: 100%;
+                /* 动画效果从右往左滑动  占据li元素宽度的100% */
+                left: 100%;
+                width: 0;
+                border-bottom: 2px solid #000;
+                transition: 0.3s all linear;
+            }
 
-        /*
+            /*
         left： 100% -> 0 transition动画效果主要是left属性发生作用，掩盖了width
          */
-        li:hover::before {
-            width: 100%;
-            left: 0;
-            transition-delay: 0.3s;
-        }
-        /*
+            li:hover::before {
+                width: 100%;
+                left: 0;
+                transition-delay: 0.3s;
+            }
+            /*
         ~ 选择器
         p ~ ul
         设置统一父元素下p元素之后每一个ul元素的属性
@@ -46,20 +46,20 @@
 
         下图将left设置为0，transition动画因为width的元素，从左向右撑开
          */
-        li:hover ~ li::before {
-            left: 0;
-        }
-    </style>
-</head>
-<body>
-    <div id="app">
-        <ul>
-            <li>不可思议的css</li>
-            <li>导航栏</li>
-            <li>光标下划线跟随</li>
-            <li>纯粹CSS</li>
-            <li>just try it</li>
-        </ul>
-    </div>
-</body>
+            li:hover ~ li::before {
+                left: 0;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="app">
+            <ul>
+                <li>不可思议的css</li>
+                <li>导航栏</li>
+                <li>光标下划线跟随</li>
+                <li>纯粹CSS</li>
+                <li>just try it</li>
+            </ul>
+        </div>
+    </body>
 </html>
