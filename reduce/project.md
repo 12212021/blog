@@ -76,3 +76,9 @@ ionic app的性能是非常有问题的，但是问题的大头主要在后端�
 
 对于一些复杂一些组件，比方说省市区联动组件作为一个form-item（视觉上），在开发的过程中，对这类复杂组件，每一个field都包裹一个form-item组件
 视觉上的效果可以通过包裹div，css `flex grid`布局来完成
+
+
+关于错误提示：
+
+抽象组件form-item如果检验出错，为给改组件添加一个类似于`error`的错误class，element中form-comp（如select、input）会提前书写好error相关的css
+样式（如border为红色），通过less或者sass嵌套的类名来覆盖border正常的颜色
