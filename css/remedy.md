@@ -156,3 +156,88 @@ left、right、bottom决定的
   - 任何祖先元素都不能设置overflow元素，那么sticky基于window进行sticky
   - 任何一个祖先元素同时设置和overflow: auto / scroll 和height，那么sticky元素基于该祖先元素进行sticky
 - 如果一个祖先元素设置了height属性，那么sticky相对于该祖先元素sticky，待该祖先元素移出视口的时候，sticky一同被移出
+
+
+
+### css中的选择器
+普通选择器：
+- \# id选择器
+- . class选择器，一般是被公用的
+- []属性选择器
+- : 伪元素选择器（在html中不存在，生生被造出来的元素）
+- ::伪类选择器（一些实实在在的元素存在一些特殊的表现形式，比方说hover等）
+
+基于关系的选择器：
+- 空格：表示该元素所有后代中符合规则的元素
+- \> :表示只选择儿子元素中（不包含孙子等元素）符合规则的元素
+- ～：兄弟选择器 表示选择该元素后面所有的兄弟元素中符合规则的元素
+- +：表示选择该元素相邻的那个兄弟元素中符合规则的元素
+
+
+### BFC：block formatting context
+创建BFC
+- float
+- absolutely position
+- display: inline-block， table-cell等
+- overflow不是visible
+- display: flow-root, list-item（flow-root属性专门为创建BFC）
+- contain: layout, content, strict
+- flex items, grid items
+
+BFC的作用
+- margin collapsing只能发生在一个BFC内部，可以隔绝BFC之间的margin塌陷
+- float回脱离文档，但是BFC能够“包含”内部float元素
+- BFC能够隔绝不属于自身的float元素
+
+
+### font相关
+
+#### font-family
+font-family定义字体（如果@font-face包含了这个字体，浏览器会优先下载该字体）
+```css
+span {
+    font-family: <family-nem> , <generic-name>
+}
+```
+
+浏览器根据font-family渲染字体是逐文字渲染的，如果某个字体没有相关的glyph，会自动找下一个字体的这个glyph
+
+
+\<family-name>： 如果包含空格的话，必须添加引号
+
+
+\<generic-name>: 不能包含空格，作为是字体族，后备机制，如果找不到标识的family-font，会从系统安装的字体中找一个合适的字体
+
+包含以下关键字： serif、sans-serif、monospace等
+
+
+#### @font-face
+```css
+@font-face {
+    font-family: 'DIN Alternate Bold';
+    font-style: normal;
+    font-weight: normal;
+    src: local('DIN Alternate Bold'), url(./woff/DINAlternate-Bold.woff) format('woff');
+}
+```
+要点
+- src可以是本地拉取的字体，也可以是网络拉取字体
+- font-family标识了\<family-name>
+- local代表会先在本地找一下是不是有这字体，如果没，再去网络拉
+- format是一个可选参数，用来标识字体是什么格式的
+
+#### font-size
+font-size属性值
+- 绝对值（px），相对值，或者math keywords
+- 一些length或者percentage，相对与父元素的font-size
+
+
+动态size
+
+- ems
+  - em代表capital 『M』在特定的字体中，数字代表一个multiplier
+  - 1.6em代表element的当前font-size的1.6倍（这个字体大小继承的）
+- rems
+  - rems reference html
+- ex
+  - ex是指选中的字体的x-height的高度，数字代表一个multiplier
