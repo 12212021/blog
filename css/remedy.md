@@ -241,3 +241,55 @@ font-size属性值
   - rems reference html
 - ex
   - ex是指选中的字体的x-height的高度，数字代表一个multiplier
+
+
+### background相关要点
+
+#### 相关属性
+- background-attachment
+    - fixed：background相对于viewport固定
+    - local：background相对于element's content，如果content滚动，background跟随滚动
+    - scroll：background相对于element itself，并且不随着content滚动而滚动
+- background-clip
+  - 标识background相对于哪种盒子固定，包括`border-box`、`padding-box`、`content-box`、`text`，
+  - 如果element没有设置bc-image或者bc-color，只有当border有一个transparent的区域的时候，这个属性才会在视觉上有呈现
+- background-color
+- background-origin
+  - border-box：background的位置相对于border-box
+  - padding-bxo：background的位置相对于padding-box
+  - content-box：background的位置相对于content-box
+  - 如果background-attachment的属性为fixed，background-origin不生效
+- background-position（详情见下）
+- background-repeat
+  - repeat-x (repeat no-repeat)
+  - repeat-y (no-repeat repeat)
+  - repeat (repeat repeat)
+  - space (space space)
+  - round (round round)
+  - no-repeat (no-repeat no-repeat)
+- background-size
+  - auto 保持图片的intrinsic，scale corresponding direction
+  - cover 保持图片的intrinsic，但是可能无法完全展示整张图
+  - contain 保持图片的intrinsic，但是视口内可能会留白
+  - 数字和百分比，百分比主要是有background-origin来决定的，默认是padding-box
+
+#### background-position
+设置为1个值的时候
+- `center` keyword，将图片居中
+- `left、right、bottom、top`设置一边为相应的关键字，另一边50%
+- length、percentage，设定x轴距离边缘的长度，y轴被设置为50%
+
+设置为2个值的时候
+- 如果left或者right形式给值，则先定义X轴再定义Y轴，如果top或者bottom形式，则先y后x
+- 给length或者percentage值，如果另一个是`left、right`关键字，则数字作用与y，如果是`top、bottom`关键字，则数字作用与x，如果均为数字，则先作用于x再作用于y
+- 诸如top、top；left、right之类的值是不合法的
+- 默认值为left top 或者 0% 0%
+
+设置为3个值的时候（两个关键字，一个数值）
+- 如果是关键字，还是left、right标识x，top、bottom表示y
+- 数值标识了第一个值的offset
+- 一个关键字，一个数值是不合法的
+
+设置为4个值的时候（两个关键字，两个数字）
+- 如果是关键字，还是left、right标识x，top、bottom表示y
+- 第一个数字标识第一个关键字规定的轴，相应的第二个标识第二个关键字标识的轴
