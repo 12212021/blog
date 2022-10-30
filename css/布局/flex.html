@@ -1,47 +1,46 @@
 <!DOCTYPE html>
 <html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            .container {
+                display: flex;
+                justify-content: flex-start;
+                align-self: center;
+                width: 300px;
+                height: 100px;
+            }
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <style>
-        .container {
-            display: flex;
-            justify-content: flex-start;
-            align-self: center;
-            width: 300px;
-            height: 100px;
-        }
+            .item {
+                flex: 0 1 0;
+                width: 50px;
+            }
 
-        .item {
-            flex: 0 1 0;
-            width: 50px;
-        }
+            .item1 {
+                background-color: #b5a87f;
+            }
 
-        .item1 {
-            background-color: #b5a87f;
-        }
+            .item2 {
+                background-color: #d0e4a9;
+            }
 
-        .item2 {
-            background-color: #d0e4a9;
-        }
+            .item3 {
+                background-color: #4dc7ec;
+            }
+        </style>
+    </head>
 
-        .item3 {
-            background-color: #4dc7ec;
-        }
-    </style>
-</head>
-
-<body>
-    <div class="container">
-        <div class="item item1">1</div>
-        <div class="item item2">2</div>
-        <div class="item item3">3</div>
-    </div>
-</body>
-<script>
-    /* 
+    <body>
+        <div class="container">
+            <div class="item item1">1</div>
+            <div class="item item2">2</div>
+            <div class="item item3">3</div>
+        </div>
+    </body>
+    <script>
+        /*
         基础概念：
         1、display: flex | inline-flex 应用该属性的元素被称为容器container
         2、container的直接子元素被称为item（项目）
@@ -50,8 +49,7 @@
         4、cross-start、cross-end（交叉轴的开始、结束位置）
      */
 
-
-    /* 
+        /*
        容器属性：
        1、flex-direction：row | row-reverse | column | column-reverse
            决定主轴的方向
@@ -65,8 +63,7 @@
            定义了多根轴线的对齐方式，如果容器只有一个主轴，该属性不发挥作用
      */
 
-
-    /* 
+        /*
         项目属性：
         1、order： <integer> 决定项目的排列顺序
         2、flex-grow： <number> 决定项目是否放大，默认为0，即使有剩余空间，也不放大
@@ -83,6 +80,37 @@
             2） none (0 0 auto)
         6、align-self 允许单个项目和其他项目有不一样的对齐方式。可以覆盖align-items
      */
-</script>
 
+        /*
+    flex属性语法：
+    flex: none | auto | [ <'flex-grow'> <'flex-shrink'>? || <'flex-basis'> ]
+    | 标识排他，几个元素中只能出现一个
+    [...] 表示范围，支持的值都在这个范围内
+    ? 表示出现的值可以是1个也可以是0个，可选
+
+
+    flex:
+    一个值：如flex : 1则1表示flex grow，（此时flex-shrink、flex-basic分别为1 0%），如果这个值是长度值，如100px，则表示flex-basic（此时flex-grow、flex-shrink为1、1）
+
+    两个值：第一个值一定是flex-grow，flex: 1 2（此时flex-basic为0%），如果flex: 1 100px（此时flex-shrink为0）
+
+    三个值：长度表示flex-basic，其余分别表示flex-grow、flex-shrink （flex: 1 2 50%；flex: 50% 1 2;的含义是一样的）
+
+
+    默认值：
+    flex: initial = flex: 0 1 auto;
+    flex: auto = flex: 1 1 auto;
+    flex: none = flex: 0 0 auto;
+
+
+    解析扩展值
+    flex: 1 = flex: 1 1 0%;
+    flex: 0 = flex: 0 1 0%;
+
+
+    flex: 1和flex: auto都是充分分配容器的尺寸
+    flex:1的尺寸表现更为内联（优先牺牲自己的尺寸）
+    flex: auto的尺寸表现更为霸道（优先扩展自己的尺寸）
+    */
+    </script>
 </html>

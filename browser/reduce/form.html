@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>form-example</title>
+        <style>
+            :root {
+                --grey: grey;
+                --green: green;
+                --red: red;
+            }
+            .error-message,
+            .success-message {
+                display: none;
+            }
+            .error-message {
+                color: var(--red);
+            }
+            .success-message {
+                color: var(--green);
+            }
+
+            main {
+                padding: 50px;
+            }
+
+            fieldset {
+                border: none;
+            }
+
+            legend {
+                font-size: 24px;
+                font-weight: bold;
+            }
+
+            input,
+            button,
+            label {
+                display: block;
+            }
+            input {
+                width: 400px;
+                height: 30px;
+                padding: 15px;
+                font-size: 16px;
+                outline: none;
+                border: 2px solid var(--grey);
+                margin-bottom: 30px;
+                box-sizing: border-box;
+            }
+
+            /* 校验有效的input */
+            input:valid {
+                border: 2px solid var(--green);
+            }
+
+            /* 校验无效的input */
+            input:invalid {
+                border: 2px solid var(--red);
+            }
+
+            /* 有min和max属性 在范围内和超出范围内的input */
+            input:in-range {
+                border: 2px solid var(--green);
+            }
+            input:out-of-range {
+                border: 2px solid var(--red);
+            }
+
+            /* focus的input */
+            input:focus {
+                border: 2px solid black;
+            }
+
+            /* 可选的input */
+            input:optional {
+            }
+
+            /* 必填的input */
+            input:required {
+            }
+
+            input:valid + .error-message + .success-message {
+                display: block;
+            }
+
+            [type='submit'] {
+                width: 150px;
+                height: 30px;
+                margin-top: 20px;
+                border: none;
+                background-color: var(--blue);
+                cursor: pointer;
+            }
+
+            /* 只读的input 被禁用的input */
+            input:disabled,
+            input:read-only {
+                border: 2px solid grey;
+            }
+
+            /* 可用的input */
+            input:enabled {
+            }
+
+            /* 当表单内部分元素invalid的时候，整个表单也是invalid */
+            form :invalid [type='submit'] {
+                background-color: var(--grey);
+                cursor: not-allowed;
+                pointer-events: none;
+            }
+
+            /* disabled submit按钮 */
+            form:invalid [type='submit']:active {
+                pointer-events: none;
+            }
+        </style>
+    </head>
+    <body>
+        <form>
+            <fieldset>
+                <legend>Submit your score</legend>
+                <label for="email">Enter your email</label>
+                <input
+                    id="email"
+                    placeholder="enter your email ending with @gmail.com"
+                    pattern="^[a-zA-Z0-9_.+-]+@gmail.com$"
+                    name="email"
+                    required
+                />
+                <span class="error-message">
+                    Enter a valid email ending with @gmail.com
+                </span>
+                <span class="success-message">Email Correct</span>
+
+                <label for="score">Enter your test result</label>
+                <input
+                    type="number"
+                    id="score"
+                    name="score"
+                    min="65"
+                    max="100"
+                    value="0"
+                    required
+                />
+                <span class="error-message">
+                    You haven't reached the minimum score
+                </span>
+                <span class="success-message">
+                    Congratulations for your excellent score
+                </span>
+                <label
+                    >Tick if you want to receive marketing spam from us
+                    <input
+                        id="accept"
+                        name="marketing"
+                        type="checkbox"
+                        required
+                    />
+                </label>
+            </fieldset>
+            <button type="reset">reset</button>
+            <button type="submit">submit</button>
+        </form>
+    </body>
+</html>
