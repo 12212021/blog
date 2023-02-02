@@ -26,16 +26,25 @@ div {
 ### css设置文字...的效果（省略效果）
 
 #### 单行文字
-要设置文字溢出的...效果，下面的五个条件都必须具备
+text-overflow主要负责web端单行文字clip（截断）效果，但是tex-overflow不会强制overflow发生，所以，如果要单行clip，则需要设置css属性overflow、white-space
 ```css
-span {
-    white-space: nowrap;
-    display: block; /* inline-block也可以 */
-    width: 100px; /*max-width属性同样能够生效，百分比是不生效的*/
-    overflow: hidden; /*明确不同于visible属性，一般用hidden*/
-    text-overflow: ellipsis;
-}
+overflow: hidden;
+white-space: nowrap;
 ```
+white-space属性不必说，主要集中在overflow属性上。
+
+
+
+overflow
+- visible(default)
+- clip（与hidden类似，但是会禁用所有的滚动，包括js程序滚动）
+- hidden，相对于padding-box，如果必要，会clip内容，同时js可以使内容发生滚动
+- scroll，浏览器总是会展示滚动条
+- auto，如果内容能够fit padding-box，表现同visible，否则同scroll
+
+overflow设置除visible、clip之外的属性，会创建一个block formatting context，另外，如果要使overflow生效，block-level container必须有个height或者width（max-height、max-width），或者white-space被设置为nowrap
+
+
 
 #### 多行文字
 ```css
