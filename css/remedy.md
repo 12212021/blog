@@ -44,6 +44,17 @@ overflow
 
 overflow设置除visible、clip之外的属性，会创建一个block formatting context，另外，如果要使overflow生效，block-level container必须有个height或者width（max-height、max-width），或者white-space被设置为nowrap
 
+针对文本溢出的情况，一般的展示逻辑是：当空间不足以展示文本的时候，文本overflow，鼠标hover的时候会展示tooltip
+
+这里就会涉及到tooltip展示时机的问题
+```js
+this.showTooltip = this.$refs.content.offsetWidth < this.$refs.content.scrollWidth || // 处理单行省略
+                   this.$refs.name.offsetHeight < this.$refs.name.scrollHeight; // 处理多行省略
+```
+
+除此之外，还需要监控文本的宽度是否发生了变化
+- 通过useLayoutEffect来监测，useLayoutEffect的性能消耗需要注意
+- 通过useEffect，监测children的变化（children的具体触发时机是什么还需要研究）
 
 
 #### 多行文字
