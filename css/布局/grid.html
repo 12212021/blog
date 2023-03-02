@@ -78,7 +78,7 @@
     </div>
 </body>
 <script>
-    /* 
+    /*
         基础概念：
 
         1、display: grid   应用该规则的元素被叫做容器，其直接子元素被称为项目，项目不包括孙子元素等。
@@ -88,9 +88,9 @@
      */
 
 
-    /* 
+    /*
        容器属性（display:grid 或者 inline-grid的元素能够设置的属性）：
-       
+
        1、grid-template-column定义每一列的宽度，grid-template-row定义每一行的宽度
            1）px、百分比等基础属性可用
            2）写重复的值时可以用repeat(3, 100px)函数替代
@@ -126,21 +126,30 @@
            1）start：对齐单元格的起始边缘。
            2）end：对齐单元格的结束边缘。
            3）center：单元格内部居中。
-           4）stretch：拉伸，占满单元格的整个宽度（默认值）。  
+           4）stretch：拉伸，占满单元格的整个宽度（默认值）。
        6、align-items： start | end | center | stretch   设置cell单元格的垂直位置
        7、justify-contents、align-contents  设置整个内容区域（所有单元格）在container容器的水平、垂直位置。
        8、grid-auto-columns、grid-auto-rows   当网格只有3列，但是某一个项目指定在第五列，浏览器会自动生成网格。该属性用来设置自动生成的网格的列宽、行高
-       
+
        注意：设置为网格布局之后：子元素（项目）的float、display: inline-block、display: table-cell、vertical-align和column-*等设置都将失效。
      */
 
 
 
-    /* 
+    /*
           项目item属性
           1、grid-column-start、grid-column-end、grid-row-start、grid-row-end 指定项目网格线的起始
           2、justify-self、align-self  指定cell在网格内的水平方向和垂直方向的位置
      */
+
+    /*
+        默认情况下，grid item不可能比内容的的size要下，所以如果grid item的content足够宽或者足够长，会撑开grid item
+        这种表现是因为其默认属性
+        min-width: auto;  min-height: auto
+        如果要覆盖这个表现场景，可以通过设置
+        min-width: 0;  min-height: 0
+        或者设置其overflow属性为非visible
+    */
 </script>
 
 </html>
