@@ -24,7 +24,7 @@ expirationTime = responseTime + freshnessLifetime - currentAge
   3. Last-Modified: Wed, 21 Oct 2015 07:28:00 GMT， (Date-Last-Modified)/ 10 （rfc2626规定）
 
 http请求过程如下图
-![image.png](https://i.loli.net/2021/04/06/2EB3Pe1Yasmuywd.png)
+![image.png](../assets/浏览器缓存.png)
 
 
 ##### 验证缓存相关HTTP请求头
