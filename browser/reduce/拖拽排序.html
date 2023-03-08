@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Document</title>
+        <style>
+            .container {
+                display: flex;
+                align-items: center;
+                flex-wrap: wrap;
+                column-gap: 40px;
+                row-gap: 40px;
+            }
+            .box {
+                width: 200px;
+                height: 150px;
+                text-align: center;
+                line-height: 150px;
+                background-color: olivedrab;
+                cursor: move;
+                box-sizing: border-box;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="box" draggable="true" data-idx="1">1</div>
+            <div class="box" draggable="true" data-idx="2">2</div>
+            <div class="box" draggable="true" data-idx="3">3</div>
+            <div class="box" draggable="true" data-idx="4">4</div>
+            <div class="box" draggable="true" data-idx="5">5</div>
+            <div class="box" draggable="true" data-idx="6">6</div>
+            <div class="box" draggable="true" data-idx="7">7</div>
+            <div class="box" draggable="true" data-idx="8">8</div>
+            <div class="box" draggable="true" data-idx="9">9</div>
+            <div class="box" draggable="true" data-idx="10">10</div>
+        </div>
+    </body>
+
+    <script>
+        let cloneCtx;
+        const draggableElements = document.querySelectorAll(
+            'div[draggable="true"]'
+        );
+        // 当元素被拖动的时候触发，如果要阻止元素被拖动，直接e.preventDefault即可
+        draggableElements.forEach(element => {
+            element.addEventListener('dragstart', event => {
+                const target = event.target;
+                const id = target.dataset.idx;
+                // 保持第一个元素不许被拖拽
+                if (id === '1') {
+                    event.preventDefault();
+                    return;
+                }
+
+                cloneCtx = target.cloneNode(true);
+                cloneCtx.style.background = 'red';
+                cloneCtx.style.position = 'absolute';
+                cloneCtx.style.top = '-9999px';
+                cloneCtx.style.left = '-9999px';
+                document.body.appendChild(cloneCtx);
+
+                const {clientX, clientY} = event;
+                const {top, left} = target.getBoundingClientRect();
+
+                // 这里背景色有渐变，很讨厌，但是没有办法去除
+                event.dataTransfer.setDragImage(
+                    cloneCtx,
+                    clientX - left,
+                    clientY - top
+                );
+                event.target.style.opacity = 0.4;
+            });
+
+            // 被拖拽的元素上触发
+            element.addEventListener('drag', event => {
+                // console.log('i am dragging');
+            });
+
+            // 被拖拽的元素上触发
+            // 通过释放鼠标按钮或者单击escape键
+            element.addEventListener('dragend', event => {
+                console.log('拖拽结束了');
+                event.target.style.opacity = 1;
+            });
+
+            // 在其他元素上触发，也在被拖拽的元素上面触发，注意区分
+            element.addEventListener('dragenter', event => {
+                console.log('其他元素放到我头顶啦！');
+                const {target} = event;
+                target.style.border = '4px dashed yellow';
+            });
+            element.addEventListener('dragleave', event => {
+                console.log('其他元素从我头顶离开了！');
+                const {target} = event;
+                target.style.border = 'none';
+            });
+            element.addEventListener('dragover', event => {
+                // console.log('其他元素一直我头顶盘旋！')
+
+                // 调用该方法保障drop时间能够被触发
+                event.preventDefault();
+            });
+
+            element.addEventListener('drop', event => {
+                const {target} = event;
+                target.style.border = 'none';
+            });
+        });
+    </script>
+</html>

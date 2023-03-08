@@ -56,10 +56,25 @@
 ### 事件类型
 
 #### 用户界面时间（UIEvent）
+load事件
+- 在window对象上，当整个页面（包括所有的外部资源如图片、css、js文件、iframes等）加载完成后触发
+- img元素上，当图片加载完成的时候会触发load事件
 
 
-### DOM的遍历
+DOMContentLoaded事件
 
+该事件在HTML文件被完全`加载`并`解析`的情况下触发，不需要等待`stylesheets、images、subframes`加载完成
+
+这里涉及到script的两个标签`async`,`defer`，其中，当script标签被标注为defer的时候，会在js脚本执行完成的时候才触发`DOMContentLoaded`，而且当script标签是module的时候，其天然就是defer的。最好的方式是script标签放置到body下面，这样兼容性问题最小，也最符合直觉
+
+
+另，defer和async的执行时机有些许的不同，可以用下图进行阐述
+![](../assets/defer-async.png)
+
+
+## DOM
+
+### 遍历
 #### nodeIterator
 通过nodeIterator来遍历DOM
 `createNodeIterator(root, whatToShow, filter)`
