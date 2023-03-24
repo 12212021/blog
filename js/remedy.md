@@ -109,10 +109,86 @@ isExists(null)
 #### js新增的了optional chaining、Nullish Coalescing方法来检测undefined、null状态，目前进入了stage 3状态
 
 
-### echarts使用中的一次坑（内存泄露）
-echarts如何释放资源：
-- 手动调用echarts的dispose方法进行资源的释放
-- 将echarts的实例设置为null来实现浏览器gc垃圾回收
+### echarts使用
+再vue组件化过程中，echart使用有一些特点需要注意，基础的echarts vue封装组件如下
+```vue
+<template>
+    <div :style="styles" class="echarts" ref="echarts"></div>
+</template>
+
+<script>
+import * as echarts from "echarts";
+export default {
+    name: "EchartComp",
+    props: {
+        width: {
+            default: "100%",
+            type: String
+        },
+        height: {
+            default: "100%",
+            type: String
+        },
+        options: {
+            type: Object,
+            require: true
+        }
+    },
+    data() {
+        return {
+            chart: null
+        };
+    },
+    computed: {
+        styles() {
+            let style = {};
+            if (this.width) {
+                style.width = this.width;
+            }
+            if (this.height) {
+                style.height = this.height;
+            }
+            return style;
+        },
+        chartDOM() {
+            return this.$refs["echarts"];
+        }
+    },
+    mounted() {
+        // echarts再init的时候，dom块必须已经挂载上去（display: none）也行不
+        this.chart = echarts.init(this.chartDOM);
+        this.chart.setOption(this.options);
+    },
+    watch: {
+        options(val) {
+            if (this.chart) {
+                this.char.setOption(val)
+            }
+        }
+    },
+    beforeDestroy() {
+        // 这里要对echarts进行资源释放，不然会存在内存泄露
+        if (this.chart) {
+            this.chart.dispose();
+            this.chart = null;
+        }
+    }
+};
+</script>
+
+<style lang="scss" scoped>
+.text {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+}
+.echarts {
+    height: 100%;
+}
+</style>
+
+```
 
 
 ### JSON和js中的转义字符

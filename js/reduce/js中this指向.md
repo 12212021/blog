@@ -80,3 +80,13 @@ const arrow2 = obj.getArrowFunction;
 console.log(arrow2()() === globalThis, arrow2()());
 
 ```
+
+#### this混乱源
+js中this混乱的源头是function，在传统的js中，function主要有三种作用
+- 当作普通函数调用（类似与arrow function）
+- 当作构造函数调用（类似于new class）
+- 当作类的method去调用（class类中的方法）
+
+这三种function的用法都有代表性，也不会产生迷惑，真正让人迷惑的是，把构造函数当作普通函数去用的时候，this代表了什么？
+
+如果运行出错还行，但是js当初设计为了简单，会默认塞入global（window）对象当作this
