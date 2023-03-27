@@ -162,7 +162,9 @@ export default {
     watch: {
         options(val) {
             if (this.chart) {
-                this.char.setOption(val)
+                // echarts的setOption采用merge的策略，如果需要全量更新，需要先clear
+                this.chart.clear();
+                this.chart.setOption(val)
             }
         }
     },

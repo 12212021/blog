@@ -17,6 +17,12 @@
             .app {
                 height: 100vh;
                 overflow: auto;
+                position: fixed;
+                top: 0;
+                bottom: 0;
+                left: 0;
+                right: 0;
+                /* fixed能够解决ios橡皮筋回弹的效果，但是需要自己设置内容区域的滚动了 */
             }
             .child {
                 width: 100%;
@@ -57,7 +63,7 @@
             .content {
                 position: relative;
                 transform: translateY(0px);
-                transition: transform, 0.3s ease-out;
+                transition: transform, 0.3s linear;
             }
         </style>
     </head>
@@ -126,6 +132,9 @@
             if (!fitPullRefresh()) {
                 return;
             }
+
+            // 下拉的时候跟手，线性
+            contentDOM.style.transition = 'transform 0.3s linear';
             // 重置下拉容器到顶部
             transY = 0;
             const point = e.touches[0];
@@ -156,6 +165,7 @@
             }
             const point = e.changedTouches[0];
             const moveY = point.clientY - start;
+            contentDOM.style.transition = 'transform 0.3s ease-out';
 
             // 只拉了一小半，没到触发loading的临界值
             if (moveY < threshhold) {

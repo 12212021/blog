@@ -313,3 +313,36 @@ font-size属性值
 设置为4个值的时候（两个关键字，两个数字）
 - 如果是关键字，还是left、right标识x，top、bottom表示y
 - 第一个数字标识第一个关键字规定的轴，相应的第二个标识第二个关键字标识的轴
+
+
+### 如何让overflow: auto页面出现滚动条时不抖动
+
+#### vw方案
+```css
+.wrap-outer {
+    margin-left: calc(100vw - 100%);
+}
+```
+或者
+```css
+.wrap-outer {
+    padding-left: calc(100vw - 100%);
+}
+```
+其中`.wrap-outer`指的的是*定宽居中*的父级，父级顶宽居中两侧才有空白，能让dom进行margin或者padding
+
+原理：100vw相当于`window.innerWidth`，是浏览器的内部宽度，*滚动条的宽度也计算再内*，100%是可用宽度，*不包含滚动条宽度*
+
+#### scrollbar-gutter
+```css
+scrollbar-gutter: auto | stable && both-edges?
+```
+```css
+scrollbar-gutter: auto;
+scrollbar-gutter: stable;
+scrollbar-gutter: stable both-edges;
+```
+属性释义
+- auto：默认行为，没有滚动条内容尽可能占据宽度，有了滚动条，可用宽度就减少
+- stable：如果overflow不是visible，预留空白位置，这样滚动条出现的时候，整个结构和布局是稳定的
+- both-edges：两侧都留好空白，这个是为了能让内容居中对称
