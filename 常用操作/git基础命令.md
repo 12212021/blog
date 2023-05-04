@@ -147,3 +147,9 @@ git branch --set-upstream-to <branch-name> origin/<branch-name> #创建本地分
 1、首先再远程机器上将master分支合并到特定的分支
 
 2、git pull --rebase
+
+
+### git commit --amend修改时间为系统当前时间
+```bash
+git commit --amend --date="now"
+```
