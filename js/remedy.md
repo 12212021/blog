@@ -402,3 +402,11 @@ input.addEventListener("keyup", function() {
 - setState中拿到的闭包state是代码执行时拿到的state，如果后一个state更新依赖前state，用preState => {}代替
 - useEffect、useMemo、useCallBack中访问到的闭包变量均需要在挂载到deps
   - 这些hooks中调用方法，最好方法在hooks内声明
+
+
+### 判断一个变量是不是对象字面量
+```js
+function isObjectLiteral(obj) {
+  return typeof obj === "object" && obj !== null && Object.getPrototypeOf(obj) === Object.prototype;
+}
+```
