@@ -277,26 +277,14 @@ obj.per.age = 10;
 - 100vw是动态的，依据屏幕的大小而变化，100%也是动态的
 
 
-2、大佬给的固定解决方案，暂时还不清楚原理
-```css
-html {
-  overflow-y: scroll;
-}
+2、利用scrollbar-gutter
+scrollbar-gutter: auto | stable && both-edges?
 
-:root {
-  overflow-y: auto;
-  overflow-x: hidden;
-}
+释义如下
+- auto：就是默认的表现。没有滚动条的时候，内容尽可能占据宽度，有了滚动条，可用宽度减小。
+- stable：如果 overflow 属性计算值不是 visible，则提前预留好空白区域，这样滚动条出现的时候，整个结构和布局都是稳定的。
+- both-edges：这个是让左右两侧同时预留好空白区域，目的是让局部绝对居中对称。
 
-:root body {
-  position: absolute;
-}
-
-body {
-  width: 100vw;
-  overflow: hidden;
-}
-```
 
 ### location替换url
 location可以通过href、assign()、replace()方法来跳转url
@@ -398,15 +386,102 @@ input.addEventListener("keyup", function() {
 });​
 ```
 
-### react stale prop or state
-- setState中拿到的闭包state是代码执行时拿到的state，如果后一个state更新依赖前state，用preState => {}代替
-- useEffect、useMemo、useCallBack中访问到的闭包变量均需要在挂载到deps
-  - 这些hooks中调用方法，最好方法在hooks内声明
-
-
 ### 判断一个变量是不是对象字面量
 ```js
 function isObjectLiteral(obj) {
   return typeof obj === "object" && obj !== null && Object.getPrototypeOf(obj) === Object.prototype;
 }
+```
+
+### 如何移除事件监听器
+通常有如下方法可以取消事件监听器
+- 通过removeEventListener方法
+- 通过once配置参数
+- 通过clone DOM node的方法了实现
+- 通过新的api Controller signal的方式来实现，有兼容性问题
+
+
+```js
+const removeByApi = () => {
+    const cb = () => {
+        console.log('cb function');
+    };
+    button.addEventListener('click', cb);
+    button.removeEventListener('click', cb);
+};
+const removeByOnce = () => {
+    button.addEventListener(
+        'click',
+        () => {
+            console.log('button click, only once!');
+        },
+        {once: true}
+    );
+};
+const removeByNode = () => {
+    // DOM clone的时候不会携带event listener
+    button.parentNode.replaceChild(button.cloneNode(true), button);
+
+    // 现代浏览器下，可以用如下的方式做
+    button.replaceWith(button.cloneNode(true));
+
+    // 这种方式下，直接绑定到dom上的事件不会被移除，如下，onclick会被重新生成一遍
+    /**
+     *  <button id="button" onclick="console.log('clicked!')">
+     *      Do Something
+     *  </button>
+     *
+     */
+};
+const removeByController = () => {
+    const button = document.getElementById('button');
+    const controller = new AbortController();
+    const {signal} = controller;
+
+    button.addEventListener('click', () => console.log('clicked!'), {signal});
+    window.addEventListener('resize', () => console.log('resized!'), {signal});
+    document.addEventListener('keyup', () => console.log('pressed!'), {signal});
+
+    // Remove all listeners at once:
+    controller.abort();
+};
+```
+
+### 如何深拷贝一个复合对象
+```js
+/**
+ * deepClone
+ *
+ * structuredClone: 内置的深拷贝，对浏览器的版本有要求
+ *
+ * JSON.parse(JSON.stringify(x)): 性能也好，但时，有一些对象不能够拷贝
+ * 1、Date，会转化为string
+ * 2、set、get会影响使用，在vue2中要注意
+ */
+const testCloneObj = {
+    info: {
+        name: 'yyy',
+        age: 12
+    },
+    list: [1, 2, 3, 4]
+};
+const copied = structuredClone(testCloneObj);
+const jsonObj = {
+    name: 12,
+    date: new Date()
+};
+Reflect.defineProperty(jsonObj, 'name', {
+    get() {
+        return 'yyyy';
+    },
+
+    set() {
+        return;
+    }
+});
+console.log(jsonObj.name);
+jsonObj.name = 12;
+console.log(jsonObj.name);
+const jsonCopied = JSON.parse(JSON.stringify(jsonObj));
+console.log(jsonCopied);
 ```
