@@ -63,7 +63,8 @@
             .content {
                 position: relative;
                 transform: translateY(0px);
-                transition: transform, 0.3s linear;
+                /* 注意如果添加了一个transition动画，但是立即删除了，浏览器是不会执行过渡和动画的 */
+                /* transition: transform, 0.3s linear; */
             }
         </style>
     </head>
@@ -87,16 +88,15 @@
         </div>
     </body>
     <script>
-        // 出现半个loading图标的时候，就达到了临界值
-        const threshhold = 26 + 13;
         const maxHeight = 26 * 3 * 1.5;
+        const middleLoadingDis = 26 * 3;
 
-        let start = 0;
+        let preStart = 0;
         let scrollTop = 0;
         let transY = 0;
 
         let isAnimating = false;
-        let isLoadig = false;
+        let isLoading = false;
 
         const contentDOM = document.querySelector('.content');
         const appDOM = document.querySelector('.app');
@@ -107,7 +107,7 @@
          * @desc 当touchend事件触发后，加载动画，在此动画期间禁用touch事件
          */
         function fitPullRefresh() {
-            if (isAnimating || isLoadig || scrollTop > 0) {
+            if (isAnimating || isLoading || scrollTop > 0) {
                 return false;
             }
             return true;
@@ -118,13 +118,16 @@
         }
 
         function request() {
+            isLoading = true;
+            isAnimating = true;
             setTimeout(() => {
                 transY = 0;
+                contentDOM.style.transition = 'transform 0.2s ease-out';
                 translateYDOM(contentDOM, transY);
-                isLoadig = false;
+                isLoading = false;
                 setTimeout(() => {
                     isAnimating = false;
-                }, 300)
+                }, 300);
             }, 1000);
         }
 
@@ -134,58 +137,84 @@
             }
 
             // 下拉的时候跟手，线性
-            contentDOM.style.transition = 'transform 0.3s linear';
+            // contentDOM.style.transition = 'transform 0.3s linear';
             // 重置下拉容器到顶部
             transY = 0;
             const point = e.touches[0];
-            start = point.clientY;
+            preStart = point.clientY;
         });
         contentDOM.addEventListener('touchmove', e => {
             if (!fitPullRefresh()) {
                 return;
             }
             const point = e.changedTouches[0];
-            const moveY = point.clientY - start;
-            // 向下滑动
-            if (moveY > 0 && moveY < threshhold) {
-                transY = moveY;
-                translateYDOM(contentDOM, transY);
+            const moveY = point.clientY - preStart;
+            // 增量计算滑动距离
+            const disY = transY + moveY;
+            // 不能滑进去
+            if (disY >= 0 && disY <= maxHeight) {
+                translateYDOM(contentDOM, disY);
+                transY = disY;
             }
-            // 超过threshhold，展示loading图标
-            else if (moveY > threshhold && moveY < maxHeight) {
-                transY = moveY;
-                console.log('move', moveY)
-                translateYDOM(contentDOM, transY);
-                return;
-            }
+            preStart = point.clientY;
         });
         contentDOM.addEventListener('touchend', e => {
             if (!fitPullRefresh()) {
                 return;
             }
-            const point = e.changedTouches[0];
-            const moveY = point.clientY - start;
-            contentDOM.style.transition = 'transform 0.3s ease-out';
 
-            // 只拉了一小半，没到触发loading的临界值
-            if (moveY < threshhold) {
-                transY = 0;
+            // 认为触底了，可以触发request请求等
+            if (Math.abs(maxHeight - transY) < 5) {
+                isAnimating = true;
+                transY = middleLoadingDis;
+                contentDOM.style.transition = 'transform 0.2s ease-out';
                 translateYDOM(contentDOM, transY);
-                return;
+                setTimeout(() => {
+                    contentDOM.style.transition = '';
+                    isAnimating = false;
+                    request();
+                }, 200);
+            } else {
+                // 这里是没能触发异步逻辑的
+                isAnimating = true;
+                transY = 0;
+                contentDOM.style.transition = 'transform 0.3s ease-in-out';
+                translateYDOM(contentDOM, transY);
+                setTimeout(() => {
+                    contentDOM.style.transition = '';
+                    isAnimating = false;
+                }, 300);
             }
-            // 过了临界值，有touchmove来决定dom块的translateY
-            // touchend代表手指松开，此时动画运行
-            isAnimating = true;
-            // loading图标正好居中，上下margin都是26px
-            transY = 26 * 3;
-            translateYDOM(contentDOM, transY);
-            // 请求钩子
-            request();
+
+            // end事件触发y距离和最后一个move事件触发的y是一样的
+            // const point = e.changedTouches[0];
+            // console.log(point.clientY, 'end');
+            // const moveY = point.clientY - preStart;
+            // const disY = transY + moveY;
+            // contentDOM.style.transition = 'transform 0.3s ease-out';
+            // setTimeout(() => {
+            //     contentDOM.style.transition = '';
+            // }, 300);
+
+            // // 只拉了一小半，没到触发loading的临界值
+            // if (moveY < threshold) {
+            //     transY = 0;
+            //     translateYDOM(contentDOM, transY);
+            //     return;
+            // }
+            // // 过了临界值，有touchmove来决定dom块的translateY
+            // // touchend代表手指松开，此时动画运行
+            // isAnimating = true;
+            // // loading图标正好居中，上下margin都是26px
+            // transY = 26 * 3;
+            // translateYDOM(contentDOM, transY);
+            // // 请求钩子
+            // request();
         });
 
         /*
-        * @desc 实时监控容器的scrollTop属性来判断容器是否吸顶
-        */
+         * @desc 实时监控容器的scrollTop属性来判断容器是否吸顶
+         */
         appDOM.addEventListener('scroll', e => {
             const top = e.target.scrollTop;
             scrollTop = top;
