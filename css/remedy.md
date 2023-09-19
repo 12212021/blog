@@ -346,3 +346,19 @@ scrollbar-gutter: stable both-edges;
 - auto：默认行为，没有滚动条内容尽可能占据宽度，有了滚动条，可用宽度就减少
 - stable：如果overflow不是visible，预留空白位置，这样滚动条出现的时候，整个结构和布局是稳定的
 - both-edges：两侧都留好空白，这个是为了能让内容居中对称
+
+
+#### v-html中的class和tag样式生效
+基于scss的的开发，需要用::v-deep来使得样式生效
+
+
+#### 基于flex、grid布局的overflow
+如果需要某个item占据最大的可用宽度，且内容溢出的时候overflow，可以用如下css了设置
+```css
+.item {
+    flex: 1 1 0%;
+    height: 0;
+    overflow: auto;
+}
+```
+这种情况下，浏览器会根据flex布局自动分配可用空间
