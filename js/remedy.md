@@ -485,3 +485,18 @@ console.log(jsonObj.name);
 const jsonCopied = JSON.parse(JSON.stringify(jsonObj));
 console.log(jsonCopied);
 ```
+
+### vue中列表无限出发触底事件
+vue在获取请求以后，concat数据之后，滚动条会自然在底部，不断触发scroll触底事件，有如下解决方案
+```js
+// 获取滚动条位置
+const scrollTop = this.$refs.scrollContainer.scrollTop;
+
+// 更新列表
+this.list = this.list.concat(newData);
+
+// 还原滚动条位置
+this.$nextTick(() => {
+  this.$refs.scrollContainer.scrollTop = scrollTop;
+});
+```
