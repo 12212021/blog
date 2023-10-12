@@ -500,3 +500,8 @@ this.$nextTick(() => {
   this.$refs.scrollContainer.scrollTop = scrollTop;
 });
 ```
+
+### vue和react中一些bug罗列备忘
+- vue中，如果import了一个class类，并且不在data中对类进行初始化，那么即使这个组件被import且初始化了多次，这个class类只会被init一次。
+- vue3和vue2的卸载的时候钩子函数不一样，vue2是beforeDestroy，vue3是onBeforeUnmount，而且再页面刷新的时候不会触发onBeforeUnmount
+- react中如果对数组用了push、sort之类的方法，可能会导致ui不更新。react的准则是里面的东西不变，但是外面的要变，vue的准则是外面的引用不变，但是内部的东西变
