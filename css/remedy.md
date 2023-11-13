@@ -362,3 +362,50 @@ scrollbar-gutter: stable both-edges;
 }
 ```
 这种情况下，浏览器会根据flex布局自动分配可用空间
+
+
+#### 拖拽dom块不跟鼠标
+业务开发过程中常常需要基于`某个区域`拖拽dom块，这种情况下，如果在这个dom上绑定了`mousemove`,`mouseup`事件，通常会造成dom不跟鼠标的现象，解决方式如下
+1. 在区域dom内部绑定`mousedown`事件，事件处理程序上在document上绑定`mousemove`,`mouseup`事件
+2. `mouseup`事件上执行clear操作，清除document上绑定的事件
+
+document.body是全局存在的，所以不会造成不跟鼠标的情况（鼠标滑动的区域会一直在document区域内）
+
+
+#### 位置信息属性
+通常是鼠标信息携带，有如下属性值，都是只读的属性
+- clientX 相对于`viewport`视口的x距离
+- movementX `currentEvent.movementX = currentEvent.screenX - previousEvent.screenX` 两个事件之间的变化值
+- offsetX 相对于`target node`和鼠标之间的x距离
+- pageX 相对于`document`和鼠标x之间的距离，包含document不可见的部分
+- screenX 相对于`全局global`，比方说展示是双屏幕、浏览器进行了缩放，都会影响
+
+#### 文字换行信息属性
+文字换行通常涉及到white-space属性，有如下属性值和释义
+- normal 默认，忽略文本中的换行符，只有在text-box需要换行的时候，才换行
+- nowrap 文字不换行
+- pre 空白符被保存，只有在text中遇到换行符或者<br />的时候才换行
+- pre-wrap 空白符保存，在text中遇到换行符、<br />和为了填充text-box的时候换行
+- pre-line 和normal一样，但是遇到text中的换行符、<br />和为了填充text-box的时候会换行
+- break-spaces 和pre-wrap属性一样，但是有如下需要注意的点
+  - 空白符会占据空间，即使在文字的尾部
+  - 每个空白符之间都存在换行的机会，即使是两个空白符之间
+  - 空白符占据空间且不会挂起来，所以会影响盒子的固有大小，（`min-content`,`max-content`）
+
+有如下表格总结white-space属性的表现
+![](assets/white-space.jpg)
+
+
+
+
+由于英文字符是不定长的，所以换行需要考虑的问题多，cjk文字是方块字，定长，容易换行。css属性涉及到`word-break`
+- normal 默认
+- break-all 为了防止overflow，可以在任何两个character之间break
+- keep-all 西文表现和normal一样，但是cjk文字不许两个字之间break
+- break-word 废弃中，是`overflow-wrap: anywhere`和`work-break: normal`的组合，会忽略overflow-wrap的实际属性值
+
+
+为了处理文字之间的break，css还引入和`overflow-wrap`属性
+- normal 只能在正常的break点break，如两个words之间的空白
+- anywhere 为了不overflow，如果一行中没有可以break的时机，那么，可是随意break，且不加连字符。`min-content`属性可以让text soft wrap。
+- break-word 和anywhere一样，但是soft wrap不考虑`min-content`属性
