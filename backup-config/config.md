@@ -2,7 +2,6 @@
 在.ssh文件夹下面新建两个key，一个是rsa、一个是ed25519，命令分别是
 `ssh-keygen -t rsa -C "yujianghua@corp.netease.com"`,`ssh-keygen -t ed25519 -C "12212021@bjtu.edu.cn"`
 
-
 在该文件下新建config文件，写入如下配置
 ```ini
 # git
@@ -17,6 +16,10 @@ HostName github.com
 PreferredAuthentications publickey
 IdentityFile ~/.ssh/id_ed25519
 ```
+
+#### git的一些配置
+git config --global core.editor "vim"
+git config user.name 12212021 && git config user.email 12212021@bjtu.edu.cn
 
 
 #### node版本切换工具n配置
