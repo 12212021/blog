@@ -166,19 +166,6 @@ static、relative、sticky，找到最近的block container（inline-block、blo
 
 
 
-### sticky无效
-position: sticky是relative和fixed的混合定位模式，sticky元素被DOM当做relative元素对待，直到它超过一个特定threshold的值，这个值是由top、
-left、right、bottom决定的
-
-所以一个sticky元素生效的条件有（当然在浏览器兼容的条件下）
-- 必须标注top等属性
-- overflow matters
-  - 任何祖先元素都不能设置overflow元素，那么sticky基于window进行sticky
-  - 任何一个祖先元素同时设置和overflow: auto / scroll 和height，那么sticky元素基于该祖先元素进行sticky
-- 如果一个祖先元素设置了height属性，那么sticky相对于该祖先元素sticky，待该祖先元素移出视口的时候，sticky一同被移出
-
-
-
 ### css中的选择器
 普通选择器：
 - \# id选择器
@@ -409,3 +396,19 @@ document.body是全局存在的，所以不会造成不跟鼠标的情况（鼠�
 - normal 只能在正常的break点break，如两个words之间的空白
 - anywhere 为了不overflow，如果一行中没有可以break的时机，那么，可是随意break，且不加连字符。`min-content`属性可以让text soft wrap。
 - break-word 和anywhere一样，但是soft wrap不考虑`min-content`属性
+
+
+### 布局
+对于h5 app而言，目前常见的布局方式是典型的header-body-footer的结构，其中header、footer是固定吸附的，中间的body部分可以滚动展示更多的内容。这种情况下，sticky属性能很好得实现。
+
+
+#### sticky无效
+position: sticky是relative和fixed的混合定位模式，sticky元素被DOM当做relative元素对待，直到它超过一个特定threshold的值，这个值是由top、
+left、right、bottom决定的
+
+所以一个sticky元素生效的条件有（当然在浏览器兼容的条件下）
+- 必须标注top等属性
+- overflow matters
+  - 任何祖先元素都不能设置overflow元素，那么sticky基于window进行sticky
+  - 任何一个祖先元素同时设置和overflow: auto / scroll 和height，那么sticky元素基于该祖先元素进行sticky
+- 如果一个祖先元素设置了height属性，那么sticky相对于该祖先元素sticky，待该祖先元素移出视口的时候，sticky一同被移出
