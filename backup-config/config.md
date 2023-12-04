@@ -42,3 +42,12 @@ export N_PRESERVE_NPM=1
 export N_PREFIX=$HOME/.n
 export PATH=$N_PREFIX/bin:$PATH
 ```
+
+#### wsl的配置
+1. windows上安装wsl `wsl --install`
+2. 商店安装Ubuntu
+3. `sudo apt update`
+4. `sudo apt upgrade`
+5. `sudo apt install zsh`
+6. `chsh -s /bin/zsh`
+7. `sh -c "$(curl -fsSL https://gitee.com/shmhlsy/oh-my-zsh-install.sh/raw/master/install.sh)"`
