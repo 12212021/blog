@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Flip 动画</title>
+        <style>
+            .list {
+                margin-top: 30px;
+                display: flex;
+                flex-direction: column;
+                row-gap: 20px;
+            }
+            .list-item {
+                background-color: green;
+                border-radius: 10px;
+                height: 38px;
+                line-height: 38px;
+                width: 200px;
+                text-align: center;
+                color: #fff;
+            }
+        </style>
+    </head>
+    <body>
+        <button class="btn">click me</button>
+        <div class="list">
+            <div class="list-item">1</div>
+            <div class="list-item">2</div>
+            <div class="list-item">3</div>
+            <div class="list-item">4</div>
+            <div class="list-item">5</div>
+            <div class="list-item">6</div>
+            <div class="list-item">7</div>
+            <div class="list-item">8</div>
+        </div>
+    </body>
+    <script>
+        class Flip {
+            constructor(dom, duration = 300) {
+                this.dom = dom;
+                this.duration = duration;
+                this.startPos = -1;
+                this.endPos = -1;
+                this._getInitPos();
+            }
+            // F 记录元素的第一个位置
+            _getInitPos() {
+                const {top} = this.dom.getBoundingClientRect();
+                this.startPos = top;
+            }
+
+            // L 记录元素最后一个位置
+            _getEndPos() {
+                const {top} = this.dom.getBoundingClientRect();
+                this.endPos = top;
+            }
+
+            play() {
+                return new Promise(r => {
+                    // I invert 将元素的位置通过transform挪动到起始位置
+                    this._getEndPos();
+                    // 添加css动画效果
+                    this.dom.animate(
+                        [
+                            {
+                                transform: `translateY(${
+                                    this.startPos - this.endPos
+                                }px)`
+                            },
+                            {
+                                transform: `translateY(0px)`
+                            }
+                        ],
+                        {
+                            duration: this.duration
+                        }
+                    );
+
+                    setTimeout(() => {
+                        this.dom.style.removeProperty('transition');
+                        r();
+                    }, this.duration);
+                });
+            }
+        }
+
+        const btnDOM = document.querySelector('.btn');
+        // const swapFlipItem = (list, a, b) => {
+        //     const t = list[a];
+        //     list[a] = list[b];
+        //     list[b] = t;
+        // };
+        const swapNode = (a, b) => {
+            const p = a.parentNode;
+            const aNext = a.nextSibling;
+            const bNext = b.nextSibling;
+            p.insertBefore(a, bNext);
+            p.insertBefore(b, aNext);
+        };
+        btnDOM.addEventListener('click', () => {
+            const listDOM = document.querySelector('.list');
+            const children = Array.from(listDOM.children);
+            const flipList = children.map(el => {
+                return new Flip(el);
+            });
+
+            for (let i = children.length - 1; i >= 0; i--) {
+                const randomIndex = Math.floor(Math.random() * i);
+                swapNode(children[randomIndex], children[i]);
+            }
+            for (const each of flipList) {
+                each.play();
+            }
+        });
+    </script>
+</html>
