@@ -1,0 +1,78 @@
+#### 介绍下BFC及其应用
+bfc是块级上下文，是页面盒模型的一个css渲染模式，相当于一个独立的容器，内部的元素和外部的元素互相都不干扰。
+
+创建bfc的方式
+- html根元素
+- float
+- absolutely position
+- display: inline-block， table-cell等
+- overflow不是visible
+- display: flow-root, list-item（flow-root属性专门为创建BFC）
+- contain: layout, content, strict
+- flex items, grid items
+
+bfc的作用
+- 内部的Box会在垂直方向上一个接一个放置
+- Box垂直方向的距离由margin决定，属于同一个BFC的两个相邻Box的margin会发生重叠
+- 每个元素的 margin box 的左边，与包含块 border box 的左边相接触
+- BFC的区域不会与float box重叠
+- BFC是页面上的一个隔离的独立容器，容器里面的子元素不会影响到外面的元素
+- 计算BFC的高度时，浮动元素也会参与计算
+
+
+#### 如何让元素垂直水平居中
+1、可以用flex、grid布局的方式
+
+```css
+.parent {
+    position: relative;
+}
+.child {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%)
+}
+```
+块级元素的水平居中，margin为auto的时候会自动占据父容器的可用空间，所以利用margin的auto属性，可以轻松实现`块级元素`靠左、居中、靠右
+```css
+.parent {
+    display: block;
+}
+.child {
+    margin-left: auto;
+    margin-right: auto;
+}
+```
+
+块级元素的垂直居中
+```css
+div {
+    width: 200px;
+    height: 100px;
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0
+    margin: auto;
+}
+```
+
+
+#### 分析比较opacity: 0、visibility: hidden、display: none 优劣和适用场景
+都是使元素在视觉上不可见，但是有如下的不同点
+
+1、display: none,让元素渲染树中移除，所有的子元素均不可见。会触发reflow。
+
+2、visibility: hidden, 元素不会从渲染树中消失，继续占据空间，不可点击，会触发repaint，子元素如设置visible可见
+
+3、opacity: 0,可以点击。触发reflow、repaint待研究
+
+
+#### Retina屏幕的1px问题
+基础问题
+- 物理像素，设备像素，所谓的一倍屏、二倍屏、三倍屏是值多少个物理像素展示1个css像素
+- 设备独立像素，css像素，是抽象单位
+- 像素设备比，dpr = 物理像素 / 设备独立像素
+

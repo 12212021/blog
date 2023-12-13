@@ -122,32 +122,6 @@ inline-block无法换行的问题
 </ul>
 ```
 
-
-
-### margin居中
-
-#### 水平居中
-- 块级元素（display: block）
-- margin-left: auto
-- margin-right: auto
-
-margin为auto的时候会自动占据父容器的可用空间，所以利用margin的auto属性，可以轻松实现`块级元素`靠左、居中、靠右
-
-#### 垂直居中
-其中top、right、left、bottom属性必须设置为0
-```css
-div {
-    width: 200px;
-    height: 100px;
-    position: absolute;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0
-    margin: auto;
-}
-```
-
 ### 包含块
 css中包含块
 对于包含块而言，百分比value（width、height、padding、margin），以及绝对定位元素（position为absolute或者fixed的），top、left、right、bottom的百分比值都是相对于包含块来计算的。
@@ -179,22 +153,6 @@ static、relative、sticky，找到最近的block container（inline-block、blo
 - \> :表示只选择儿子元素中（不包含孙子等元素）符合规则的元素
 - ～：兄弟选择器 表示选择该元素后面所有的兄弟元素中符合规则的元素
 - +：表示选择该元素相邻的那个兄弟元素中符合规则的元素
-
-
-### BFC：block formatting context
-创建BFC
-- float
-- absolutely position
-- display: inline-block， table-cell等
-- overflow不是visible
-- display: flow-root, list-item（flow-root属性专门为创建BFC）
-- contain: layout, content, strict
-- flex items, grid items
-
-BFC的作用
-- margin collapsing只能发生在一个BFC内部，可以隔绝BFC之间的margin塌陷
-- float回脱离文档，但是BFC能够“包含”内部float元素
-- BFC能够隔绝不属于自身的float元素
 
 
 ### font相关
