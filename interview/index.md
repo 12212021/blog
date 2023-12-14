@@ -76,3 +76,62 @@ div {
 - 设备独立像素，css像素，是抽象单位
 - 像素设备比，dpr = 物理像素 / 设备独立像素
 
+所以说这里的1px在2倍屏幕下，应该是0.5px，一般而言，有下面几个方法来做
+- 用图片来填边（不能代码修改颜色、不支持圆角）
+- 用vw的方式来实现
+- 伪元素先放大后缩小
+
+
+vm方案代码
+```html
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+        <meta name="viewport" id="WebViewport" content="initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+        <title>Document</title>
+        <style type="text/css"></style>
+    </head>
+    <body>
+        <script type="text/javascript">
+            let viewport = document.querySelector('meta[name=viewport]')
+            //下面是根据设备像素设置viewport
+            if (window.devicePixelRatio == 1) {
+                viewport.setAttribute('content', 'width=device-width,initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no')
+            }
+            if (window.devicePixelRatio == 2) {
+                viewport.setAttribute('content', 'width=device-width,initial-scale=0.5, maximum-scale=0.5, minimum-scale=0.5, user-scalable=no')
+            }
+            if (window.devicePixelRatio == 3) {
+                viewport.setAttribute('content', 'width=device-width,initial-scale=0.3333333333333333, maximum-scale=0.3333333333333333, minimum-scale=0.3333333333333333, user-scalable=no')
+            }
+            function resize() {
+                let width = screen.width > 750 ? '75px' : screen.width / 10 + 'px'
+                document.getElementsByTagName('html')[0].style.fontSize = width
+            }
+            window.onresize = resize
+        </script>
+    </body>
+</html>
+```
+
+伪元素代码
+```css
+.hairline{
+  position: relative;
+  &::after{
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    height: 1px;
+    width: 100%;
+    transform: scaleY(0.5);
+    transform-origin: 0 0;
+    background-color: #EDEDED;
+  }
+}
+```
+
+
