@@ -86,4 +86,4 @@ js中this混乱的源头是function，在传统的js中，function主要有三�
 - 当作普通函数调用（类似与arrow function）
 - 当作构造函数调用（类似于new class）
 - 当作类的method去调用（class类中的方法）
-这三种function的调用都比较典型，也不会造成错误，但是这里有一个问题，就是如果把一个constructor function当做一个普通的function调用。合理的方式是直接报错，但是js的实现上，会默认给window当做this，所以全局的function其实也是全局对象的method。
+这三种function的调用都比较典型，也不会造成错误，但是这里有一个问题，就是如果把一个constructor function、method当做一个普通的function调用。合理的方式是直接报错，但是js的实现上，会默认给window当做this，所以全局的function其实也是全局对象的method。

@@ -133,3 +133,30 @@ vm方案代码
   }
 }
 ```
+
+#### 长列表的渲染
+- 可以采用虚拟列表的方式去渲染
+  - 虚拟列表的每一项高度固定
+  - 通过滚动的位置去渲染可视化的区域、以及上下的缓存区域
+- 通过requestFrame API去分页加载，通过observable的浏览器接口去观测DOM是否在视口内，不在视口内的可以用visibility: hidden隐藏
+- content-visibility、contain-intrinsic-size两个新的css属性去虚拟渲染
+
+
+#### 如何实现深拷贝
+- 浏览器的structuredClone原生方法
+- 通过JSON.stringify、JSON.parse
+  - 循环引用无法处理
+  - function、bingInt、Symbol、Date等不能序列化的对象无法处理
+- lodash的deepClone方法
+
+#### React hooks的优势
+
+#### useEffect、useLayoutEffect
+
+#### 前端如何跨域
+- JSONP通过script标签去跨域
+  - 只能用get请求
+- 通过img标签去跨域
+- 通过CORS去跨域
+- 通过iframe去跨域
+
