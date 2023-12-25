@@ -149,8 +149,6 @@ vm方案代码
   - function、bingInt、Symbol、Date等不能序列化的对象无法处理
 - lodash的deepClone方法
 
-#### React hooks的优势
-
 #### useEffect、useLayoutEffect
 
 
@@ -194,3 +192,22 @@ p2
 sett1
 */
 ```
+
+#### 如何使用css画三角形
+```css
+#triangle {
+    width: 0;
+    height: 0;
+    box-sizing: content-box;
+    border: 10px solid;
+    border-color: transparent transparent transparent green;
+}
+```
+
+#### 箭头函数的作用
+es6以前，js中函数是一鱼三吃的，承担了`class constructor`,`class method`, `plain function`的作用，es6之后，class和箭头函数的引入让函数的职责更加明确了
+
+- 箭头函数的书写更加简洁
+- 箭头函数没有自己的this，绑定了词法作用域的this，也不支持call、apply、bind去修改this
+- 箭头函数的内部无法使用arguments对象
+- 箭头函数无法通过new去调用
