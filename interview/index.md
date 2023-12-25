@@ -145,7 +145,7 @@ vm方案代码
 #### 如何实现深拷贝
 - 浏览器的structuredClone原生方法
 - 通过JSON.stringify、JSON.parse
-  - 循环引用无法处理
+  - `循环引用`无法处理
   - function、bingInt、Symbol、Date等不能序列化的对象无法处理
 - lodash的deepClone方法
 
@@ -153,10 +153,44 @@ vm方案代码
 
 #### useEffect、useLayoutEffect
 
-#### 前端如何跨域
-- JSONP通过script标签去跨域
-  - 只能用get请求
-- 通过img标签去跨域
-- 通过CORS去跨域
-- 通过iframe去跨域
 
+#### 宏任务和微任务
+从node的角度来说，包括了`process.nextTick`
+- 宏任务
+  - 当前脚本的执行
+  - setInterval、setTimeout api产生的任务
+- 微任务
+  - process.nextTick
+  - Promise产生的任务
+  - 通过`queueMicrotask`执行的任务
+
+浏览器执行任务的时候，会优先执行微任务，（微任务可以向微任务队列添加任务、微任务），当当前微任务队列不存在任务时候，再执行宏任务。
+```js
+console.log('start')
+setTimeout(() => {
+    console.log('sett1')
+}, 0)
+
+Promise.resolve().then(() => {
+    console.log('p1')
+    return Promise.resolve()
+}).then(() => {
+    console.log('p2')
+})
+
+process.nextTick(() => {
+    console.log('process')
+    process.nextTick(() => {
+        console.log('process 2')
+    })
+})
+/*
+运行结果：
+start
+process
+process 2
+p1
+p2
+sett1
+*/
+```
