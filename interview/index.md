@@ -840,3 +840,55 @@ class SliceBlob {
     }
 }
 ```
+
+#### 赋值运算符
+```js
+var a = {
+    a: 10,
+    b: 20
+};
+
+var b = a;
+
+// a.n = 10 a地址添加一个n属性，也就是b地址
+// a = 10表达式，返回10，相当于给b指向添加n属性
+a.n = a = 10;
+
+// b = { a: 10, b: 20, n: 10 }
+// a = 10
+```
+
+#### css的权重
+css的属性基于(x,y,z)三个元组去比较，其中
+- x代表id选择器的数量
+- y代表类、伪类、属性的数量
+- 元素、伪元素的数量
+
+
+vscode hover到类上的时候，会有权重的提示
+
+```css
+#list {} (1,0,0)
+div {} (0,0,1)
+.box {} (0,1,0)
+
+.box #list::before {} (1,1,1)
+.box #list a::before {} (1,1,3)
+.box .form input[type="text"] {} (0,3,1)
+.box ul a:hover{} (0,2,2)
+```
+
+#### js中undefined
+undefined不是js中的关键字，是挂载在window对象上的，一个`只读`属性，所以有几个方法
+- 变量声明不赋值，直接就是undefined
+- 变量赋值为null
+- var a = void 0;
+```js
+function test() {
+    const undefined = 10
+    const val = undefined;
+    return val;
+}
+// test()  10
+```
+
